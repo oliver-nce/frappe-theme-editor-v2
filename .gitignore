@@ -1,0 +1,48 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.cursor/
+
+# Backup/temp files
+*.bak
+*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# Node (if added later)
+node_modules/
+
+# Development/reference files (not part of the Frappe app)
+*.clr
+*.xlsx
+*.html
+!frappe_theme_editor/**/*.html
+docs/
+src/
+temp/
+restructure.sh
+rules.md
+frappe-theme-structure.json
+sample_theme.json
+Themes.png
+admin.png
+nce_tables.png
+/logo.png
+VERSION.txt
+*.md
+!README.md
+!license.txt

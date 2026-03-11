@@ -1,0 +1,187 @@
+═══════════════════════════════════════════════════════════════════════════════
+NEUTRAL COLOR PICKER - CODE TO ADD
+═══════════════════════════════════════════════════════════════════════════════
+
+This file contains the code snippets to add for the neutral color picker.
+Review and then manually add, or tell me to add each section one at a time.
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION 1: CSS (add AFTER line ~583, after the @media query closing brace)
+═══════════════════════════════════════════════════════════════════════════════
+
+        /* NEUTRAL COLOR PICKER STYLES */
+        .neutral-picker-panel {
+            background: var(--neutral-50, #fafafa);
+            border: 1px solid var(--neutral-200, #e5e5e5);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+        }
+        
+        .neutral-picker-layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+        
+        .neutral-color-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .neutral-grid-cell {
+            width: 70px;
+            height: 70px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.1s, border-color 0.15s;
+        }
+        
+        .neutral-grid-cell:hover {
+            transform: scale(1.05);
+            z-index: 1;
+        }
+        
+        .neutral-grid-cell.selected {
+            border-color: #333;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #333;
+        }
+        
+        .neutral-picker-right {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .neutral-preview-swatch {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION 2: HTML (REPLACE the existing neutral editor-panel content)
+Location: Find <div class="editor-panel hidden" id="editor-neutral">
+═══════════════════════════════════════════════════════════════════════════════
+
+            <div class="editor-panel hidden" id="editor-neutral">
+                <button class="close-editor" onclick="toggleEditor('neutral')">✕</button>
+                <label>Neutral Color Temperature</label>
+                <div class="neutral-picker-panel">
+                    <div class="neutral-picker-layout">
+                        <div class="neutral-color-grid" id="neutralColorGrid"></div>
+                        <div class="neutral-picker-right">
+                            <div class="neutral-preview-swatch" id="neutralPreviewSwatch"></div>
+                            <div class="scale-bump-panel">
+                                <div class="scale-bump-title">Scale Bump</div>
+                                <div class="scale-bump-buttons">
+                                    <button class="scale-bump-btn" id="neutralBumpLighter" onclick="bumpNeutralScale(-1)">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="5"></circle>
+                                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                                        </svg>
+                                        Lighter
+                                    </button>
+                                    <span class="scale-bump-indicator" id="neutralBumpIndicator">--</span>
+                                    <button class="scale-bump-btn" id="neutralBumpDarker" onclick="bumpNeutralScale(1)">
+                                        Darker
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="picker-apply-btn" onclick="applyNeutralColor()">Apply as Neutral Color</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION 3: JAVASCRIPT (add at the VERY END of the script, just before </script>)
+═══════════════════════════════════════════════════════════════════════════════
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // NEUTRAL COLOR PICKER (completely independent)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    var neutralSelectedHue = 210;
+    var neutralSelectedCell = null;
+
+    function buildNeutralGrid() {
+        var grid = document.getElementById('neutralColorGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        // 7 hue temps: cool blue → gray → warm brown
+        var hueTemps = [210, 200, 190, 0, 30, 35, 40];
+        // 3 saturation rows
+        var satLevels = [
+            { sat: 8, val: 62 },
+            { sat: 12, val: 58 },
+            { sat: 18, val: 52 }
+        ];
+
+        satLevels.forEach(function(level) {
+            hueTemps.forEach(function(hue) {
+                var cell = document.createElement('div');
+                cell.className = 'neutral-grid-cell';
+                var sat = (hue === 0) ? 0 : level.sat;
+                var hex = hsvToHex(hue, sat, level.val);
+                cell.style.backgroundColor = hex;
+                cell.dataset.hue = hue;
+                cell.onclick = function() { selectNeutralCell(cell, hue, hex); };
+                grid.appendChild(cell);
+            });
+        });
+    }
+
+    function selectNeutralCell(cell, hue, hex) {
+        if (neutralSelectedCell) neutralSelectedCell.classList.remove('selected');
+        neutralSelectedCell = cell;
+        cell.classList.add('selected');
+        neutralSelectedHue = hue;
+        document.getElementById('neutralPreviewSwatch').style.backgroundColor = hex;
+    }
+
+    function applyNeutralColor() {
+        state.neutralHue = neutralSelectedHue;
+        state.neutralOffset = 0;
+        document.getElementById('neutralBumpIndicator').textContent = '0';
+        updateNeutralBumpButtons();
+        updateUI();
+    }
+
+    function bumpNeutralScale(direction) {
+        state.neutralOffset = (state.neutralOffset || 0) + direction;
+        state.neutralOffset = Math.max(-5, Math.min(5, state.neutralOffset));
+        document.getElementById('neutralBumpIndicator').textContent = String(state.neutralOffset);
+        updateNeutralBumpButtons();
+        updateUI();
+    }
+
+    function updateNeutralBumpButtons() {
+        var lighterBtn = document.getElementById('neutralBumpLighter');
+        var darkerBtn = document.getElementById('neutralBumpDarker');
+        if (!lighterBtn || !darkerBtn) return;
+        var offset = state.neutralOffset || 0;
+        lighterBtn.disabled = (offset <= -5);
+        darkerBtn.disabled = (offset >= 5);
+    }
+
+    // Initialize neutral picker
+    buildNeutralGrid();
+    var previewEl = document.getElementById('neutralPreviewSwatch');
+    if (previewEl) previewEl.style.backgroundColor = hsvToHex(210, 8, 62);
+

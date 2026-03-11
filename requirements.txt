@@ -1,0 +1,2 @@
+# Frappe Theme Editor dependencies
+# frappe is installed separately via bench

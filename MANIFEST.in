@@ -1,0 +1,12 @@
+include MANIFEST.in
+include requirements.txt
+include *.md
+include *.py
+include *.txt
+recursive-include frappe_theme_editor *.py
+recursive-include frappe_theme_editor *.json
+recursive-include frappe_theme_editor *.html
+recursive-include frappe_theme_editor *.css
+recursive-include frappe_theme_editor *.js
+recursive-include frappe_theme_editor *.png
+recursive-include frappe_theme_editor *.txt

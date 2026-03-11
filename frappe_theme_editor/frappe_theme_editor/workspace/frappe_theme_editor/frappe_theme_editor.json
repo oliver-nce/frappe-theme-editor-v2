@@ -1,0 +1,54 @@
+{
+ "app": "frappe_theme_editor",
+ "charts": [],
+ "content": "[{\"id\": \"shortcut-theme-editor\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Theme Editor\", \"col\": 4}}]",
+ "creation": "2026-02-09 09:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "tool",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Themes",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Theme Editor",
+   "link_count": 0,
+   "link_to": "theme-editor",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-16 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Frappe Theme Editor",
+ "name": "Themes",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 10,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "format": "",
+   "icon": "tool",
+   "label": "Theme Editor",
+   "link_to": "theme-editor",
+   "restrict_to_domain": "",
+   "stats_filter": "",
+   "type": "Page"
+  }
+ ],
+ "title": "Themes",
+ "type": "Workspace"
+}

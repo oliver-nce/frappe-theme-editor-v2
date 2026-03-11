@@ -1,0 +1,1 @@
+# Frappe Theme Editor config

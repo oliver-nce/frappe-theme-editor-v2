@@ -1,0 +1,92 @@
+{
+  "actions": [],
+  "allow_rename": 0,
+  "creation": "2026-03-10 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "theme_section",
+    "active_theme",
+    "theme_status",
+    "column_break_1",
+    "apply_theme",
+    "revert_to_default",
+    "preview_section",
+    "css_preview"
+  ],
+  "fields": [
+    {
+      "fieldname": "theme_section",
+      "fieldtype": "Section Break",
+      "label": "Theme Configuration"
+    },
+    {
+      "fieldname": "active_theme",
+      "fieldtype": "Link",
+      "label": "Active Theme",
+      "options": "Theme",
+      "reqd": 0,
+      "description": "Select a theme from the Theme table to apply to this site"
+    },
+    {
+      "fieldname": "theme_status",
+      "fieldtype": "Data",
+      "label": "Status",
+      "read_only": 1,
+      "default": "Default Frappe Theme",
+      "description": "Current theme status"
+    },
+    {
+      "fieldname": "column_break_1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "apply_theme",
+      "fieldtype": "Button",
+      "label": "Apply Theme",
+      "description": "Apply the selected theme to the site"
+    },
+    {
+      "fieldname": "revert_to_default",
+      "fieldtype": "Button",
+      "label": "Revert to Default",
+      "description": "Remove custom theme and restore default Frappe styling"
+    },
+    {
+      "fieldname": "preview_section",
+      "fieldtype": "Section Break",
+      "label": "Generated CSS Preview",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "css_preview",
+      "fieldtype": "Code",
+      "label": "CSS Preview",
+      "read_only": 1,
+      "options": "CSS",
+      "description": "Preview of the CSS that will be applied"
+    }
+  ],
+  "issingle": 1,
+  "links": [],
+  "modified": "2026-03-10 00:00:00.000000",
+  "modified_by": "Administrator",
+  "module": "Frappe Theme Editor",
+  "name": "Theme Selector",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "desc",
+  "track_changes": 1
+}
