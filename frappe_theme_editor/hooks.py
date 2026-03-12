@@ -24,7 +24,6 @@ app_include_css = [
 
 # Include JS files in header of desk.html
 app_include_js = [
-	"/assets/frappe_theme_editor/js/theme_editor.js",
 	"/assets/frappe_theme_editor/js/nce_theme_boot.js",
 ]
 
