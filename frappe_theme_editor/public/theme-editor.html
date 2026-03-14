@@ -2167,7 +2167,7 @@
                     <div class="gradient-control-group">
                         <label>Page Background</label>
                         <div class="swatch-picker" id="picker-pageBg">
-                            <div class="swatch-picker-trigger" data-action="toggle-swatch-picker" data-target="picker-pageBg" data-action="toggle-swatch-picker" data-target="picker-pageBg">
+                            <div class="swatch-picker-trigger" data-action="toggle-swatch-picker" data-target="picker-pageBg">
                                 <div class="trigger-swatch"></div>
                                 <span class="trigger-label">alternate-50</span>
                                 <span class="trigger-arrow">▼</span>
@@ -2179,7 +2179,7 @@
                         <label>UI Font</label>
                         <div style="display: flex; gap: 16px; align-items: center;">
                             <div class="styled-menu" id="menu-uiFont">
-                                <div class="styled-menu-trigger" data-action="toggle-menu" data-target="menu-uiFont" data-action="toggle-menu" data-target="menu-uiFont" title="Select UI font family">
+                                <div class="styled-menu-trigger" data-action="toggle-menu" data-target="menu-uiFont" title="Select UI font family">
                                     <span class="menu-label" id="fontMenuLabel">Arial</span>
                                     <span class="menu-arrow">▼</span>
                                 </div>
@@ -4651,12 +4651,151 @@
         updateBumpButtons();
     }
     
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SWATCH PICKER & STYLED MENU FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const SWATCH_SHADES = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+
+    function buildSwatchGrid(pickerId) {
+        const dropdown = document.getElementById(pickerId + '-dropdown');
+        if (!dropdown || dropdown.dataset.built) return;
+
+        const stateKey = pickerId.replace('picker-', '');
+        const currentValue = state[stateKey] || '';
+        const includeWhite = ['pageBg', 'panelBg'].includes(stateKey);
+
+        let html = '';
+
+        if (includeWhite) {
+            html += `<div class="swatch-grid-section">
+                <div class="swatch-grid-label">Special</div>
+                <div class="swatch-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="swatch-grid-item${currentValue === 'white' ? ' selected' : ''}"
+                        data-value="white" style="background: #fff; border: 1px solid #ddd;"
+                        data-action="select-swatch" data-target="${pickerId}"></div>
+                    <div class="swatch-grid-item${currentValue === 'black' ? ' selected' : ''}"
+                        data-value="black" style="background: #000;"
+                        data-action="select-swatch" data-target="${pickerId}"></div>
+                </div>
+            </div>`;
+        }
+
+        html += `<div class="swatch-grid-section">
+            <div class="swatch-grid-label">Primary</div>
+            <div class="swatch-grid">
+                ${SWATCH_SHADES.map(s => `<div class="swatch-grid-item${currentValue === 'primary-'+s ? ' selected' : ''}"
+                    data-value="primary-${s}" data-action="select-swatch" data-target="${pickerId}"></div>`).join('')}
+            </div>
+        </div>`;
+
+        html += `<div class="swatch-grid-section">
+            <div class="swatch-grid-label">Alternate</div>
+            <div class="swatch-grid">
+                ${SWATCH_SHADES.map(s => `<div class="swatch-grid-item${currentValue === 'alternate-'+s ? ' selected' : ''}"
+                    data-value="alternate-${s}" data-action="select-swatch" data-target="${pickerId}"></div>`).join('')}
+            </div>
+        </div>`;
+
+        dropdown.innerHTML = html;
+        dropdown.dataset.built = 'true';
+        updateSwatchGridColors(pickerId);
+    }
+
+    function updateSwatchGridColors(pickerId) {
+        const dropdown = document.getElementById(pickerId + '-dropdown');
+        if (!dropdown) return;
+        dropdown.querySelectorAll('.swatch-grid-item').forEach(item => {
+            item.style.backgroundColor = getTokenColor(item.dataset.value);
+        });
+    }
+
+    function toggleSwatchPicker(pickerId) {
+        const dropdown = document.getElementById(pickerId + '-dropdown');
+        const isOpen = dropdown.classList.contains('open');
+
+        document.querySelectorAll('.swatch-picker-dropdown, .styled-menu-dropdown').forEach(d => d.classList.remove('open'));
+
+        if (!isOpen) {
+            dropdown.dataset.built = '';
+            buildSwatchGrid(pickerId);
+            dropdown.classList.add('open');
+        }
+    }
+
+    function selectSwatchOption(pickerId, value) {
+        const stateKey = pickerId.replace('picker-', '');
+        state[stateKey] = value;
+
+        const trigger = document.querySelector(`#${pickerId} .trigger-swatch`);
+        const triggerLabel = document.querySelector(`#${pickerId} .trigger-label`);
+        if (trigger) {
+            trigger.style.backgroundColor = getTokenColor(value);
+            trigger.style.border = value === 'white' ? '1px solid #ddd' : 'none';
+        }
+        if (triggerLabel) triggerLabel.textContent = value;
+
+        const dropdown = document.getElementById(pickerId + '-dropdown');
+        dropdown.querySelectorAll('.swatch-grid-item').forEach(item => {
+            item.classList.toggle('selected', item.dataset.value === value);
+        });
+        dropdown.classList.remove('open');
+
+        updateUI();
+    }
+
+    function updateSwatchPicker(picker) {
+        const pickerId = picker.id;
+        const stateKey = pickerId.replace('picker-', '');
+        const value = state[stateKey];
+
+        const trigger = picker.querySelector('.trigger-swatch');
+        const triggerLabel = picker.querySelector('.trigger-label');
+        if (trigger && value) {
+            trigger.style.backgroundColor = getTokenColor(value);
+            trigger.style.border = value === 'white' ? '1px solid #ddd' : 'none';
+        }
+        if (triggerLabel && value) triggerLabel.textContent = value;
+
+        const dropdown = document.getElementById(pickerId + '-dropdown');
+        if (dropdown) dropdown.dataset.built = '';
+    }
+
+    function toggleStyledMenu(menuId) {
+        const dropdown = document.getElementById(menuId + '-dropdown');
+        const isOpen = dropdown.classList.contains('open');
+
+        document.querySelectorAll('.swatch-picker-dropdown, .styled-menu-dropdown').forEach(d => d.classList.remove('open'));
+
+        if (!isOpen) dropdown.classList.add('open');
+    }
+
+    function selectStyledMenu(menuId, value) {
+        const menu = document.getElementById(menuId);
+        if (!menu) return;
+        const triggerLabel = menu.querySelector('.menu-label');
+        if (triggerLabel) triggerLabel.textContent = value;
+        menu.querySelectorAll('.styled-menu-option').forEach(opt => {
+            opt.classList.toggle('selected', opt.dataset.value === value);
+        });
+        document.getElementById(menuId + '-dropdown').classList.remove('open');
+    }
+
+    function updateInheritedSwatches() {
+        // No-op in V2 (Frappe-specific tabs removed)
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.swatch-picker') && !e.target.closest('.styled-menu')) {
+            document.querySelectorAll('.swatch-picker-dropdown, .styled-menu-dropdown').forEach(d => d.classList.remove('open'));
+        }
+    });
+
     // Refresh all swatch pickers to reflect current colors (e.g., after offset change)
     function refreshAllSwatchPickers() {
         document.querySelectorAll('.swatch-picker').forEach(picker => {
             updateSwatchPicker(picker);
         });
-        updateInheritedSwatches();
     }
     
     // ═══════════════════════════════════════════════════════════════════════════
@@ -5116,6 +5255,7 @@
         if (activePalette && colorPickers.shared) {
             paletteHSV[activePalette] = colorPickers.shared.getHSV();
         }
+        closePicker();
     });
 
     // Load default theme, then update UI
