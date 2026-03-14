@@ -4507,8 +4507,8 @@
         // Transfer pre-bump offset to anchor offset, then clear shadeOffset
         state.anchorOffset = preBumpOffset;
         state.shadeOffset = 0;
-        document.getElementById('anchorIndicator').textContent = 
-            state.anchorOffset === 0 ? '0' : `${state.anchorOffset}`;
+        const _ai = document.getElementById('anchorIndicator');
+        if (_ai) _ai.textContent = state.anchorOffset === 0 ? '0' : `${state.anchorOffset}`;
 
         // Update UI
         updateUI();
@@ -4714,7 +4714,8 @@
             state.anchorShade = shades[newIdx];
             // Update offset counter (relative to initial anchor)
             state.anchorOffset = (state.anchorOffset || 0) + direction;
-            document.getElementById('anchorIndicator').textContent = `${state.anchorOffset}`;
+            const _ai2 = document.getElementById('anchorIndicator');
+            if (_ai2) _ai2.textContent = `${state.anchorOffset}`;
         } else {
             // Without anchor: quantum shift all shades
             // Use shadeOffset to track the shift level
@@ -4723,7 +4724,8 @@
             // Clamp to reasonable bounds (-5 to +5 steps)
             state.shadeOffset = Math.max(-5, Math.min(5, state.shadeOffset));
             
-            document.getElementById('anchorIndicator').textContent = `${state.shadeOffset}`;
+            const _ai3 = document.getElementById('anchorIndicator');
+            if (_ai3) _ai3.textContent = `${state.shadeOffset}`;
         }
         
         updateBumpButtons();
