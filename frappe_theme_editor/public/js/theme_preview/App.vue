@@ -53,13 +53,43 @@
 			</div>
 		</div>
 
+		<!-- COLOR REFERENCE STRIPS -->
+		<div class="tp-card" :style="{ background: surfPanel, borderColor: alt('200') }">
+			<h3 class="tp-section-title" :style="{ color: ink(8) }">Color Reference</h3>
+
+			<p class="tp-strip-label" :style="{ color: ink(6) }">Primary</p>
+			<div class="tp-strip-row">
+				<div v-for="s in shades" :key="'ps'+s" class="tp-strip-swatch" :style="{ background: pri(s) }">
+					<span class="tp-strip-shade" :style="{ color: parseInt(s) >= 500 ? '#fff' : ink(9) }">{{ s }}</span>
+					<span class="tp-strip-hex" :style="{ color: parseInt(s) >= 500 ? 'rgba(255,255,255,0.7)' : ink(4) }">pri-{{ s }}</span>
+				</div>
+			</div>
+
+			<p class="tp-strip-label tp-mt-12" :style="{ color: ink(6) }">Alternate</p>
+			<div class="tp-strip-row">
+				<div v-for="s in shades" :key="'as'+s" class="tp-strip-swatch" :style="{ background: alt(s) }">
+					<span class="tp-strip-shade" :style="{ color: parseInt(s) >= 500 ? '#fff' : ink(9) }">{{ s }}</span>
+					<span class="tp-strip-hex" :style="{ color: parseInt(s) >= 500 ? 'rgba(255,255,255,0.7)' : ink(4) }">alt-{{ s }}</span>
+				</div>
+			</div>
+
+			<p class="tp-strip-label tp-mt-12" :style="{ color: ink(6) }">Ink (text colors)</p>
+			<div class="tp-strip-row">
+				<div v-for="i in 9" :key="'ink'+i" class="tp-strip-swatch" :style="{ background: ink(i), border: i <= 3 ? '1px solid ' + alt('200') : 'none' }">
+					<span class="tp-strip-shade" :style="{ color: i >= 5 ? '#fff' : ink(9) }">{{ i }}</span>
+					<span class="tp-strip-hex" :style="{ color: i >= 5 ? 'rgba(255,255,255,0.7)' : ink(4) }">ink-{{ i }}</span>
+				</div>
+			</div>
+		</div>
+
 		<!-- 2. KPI CARDS -->
 		<div class="tp-kpi-row">
 			<div v-for="(card, i) in kpiCards" :key="i" class="tp-kpi-card"
 				:style="{ background: surfPanel, borderColor: alt('200'), boxShadow: '0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1)' }">
+				<span class="tp-shade-tag" :style="{ color: alt('400') }">border: alt-200</span>
 				<div class="tp-kpi-top">
 					<div>
-						<p class="tp-kpi-label" :style="{ color: ink(5) }">{{ card.label }}</p>
+						<p class="tp-kpi-label" :style="{ color: ink(5) }">{{ card.label }} <span class="tp-shade-ref">ink-5</span></p>
 						<p class="tp-kpi-value" :style="{ color: ink(9) }">{{ card.value }}</p>
 					</div>
 					<div class="tp-kpi-icon" :style="{ background: pri('100') }">
@@ -72,7 +102,7 @@
 				<div class="tp-kpi-bottom">
 					<span class="tp-kpi-change"
 						:style="{ color: card.positive ? sem('success') : sem('danger') }">{{ card.change }}</span>
-					<span class="tp-kpi-vs" :style="{ color: ink(4) }">vs last month</span>
+					<span class="tp-kpi-vs" :style="{ color: ink(4) }">vs last month <span class="tp-shade-ref">ink-4</span></span>
 				</div>
 			</div>
 		</div>
@@ -81,7 +111,7 @@
 			<!-- 3. DATA TABLE -->
 			<div class="tp-table-wrapper" :style="{ background: surfPanel, borderColor: alt('200') }">
 				<div class="tp-section-header">
-					<h3 class="tp-section-title" :style="{ color: ink(8) }">Recent Accounts</h3>
+					<h3 class="tp-section-title" :style="{ color: ink(8) }">Recent Accounts <span class="tp-shade-ref">ink-8</span></h3>
 					<button class="tp-sm-btn"
 						:style="{ color: pri('600'), borderColor: pri('200'), background: pri('50') }">View All</button>
 				</div>
@@ -89,7 +119,7 @@
 					<table class="tp-table">
 						<thead>
 							<tr :style="{ background: alt('50') }">
-								<th :style="{ color: ink(6), borderColor: alt('200') }">Company</th>
+								<th :style="{ color: ink(6), borderColor: alt('200') }">Company <span class="tp-shade-ref">ink-6 / bg: alt-50</span></th>
 								<th :style="{ color: ink(6), borderColor: alt('200') }">Contact</th>
 								<th :style="{ color: ink(6), borderColor: alt('200') }">Status</th>
 								<th :style="{ color: ink(6), borderColor: alt('200') }" class="text-right">Revenue</th>
@@ -98,8 +128,8 @@
 						<tbody>
 							<tr v-for="(row, idx) in tableData" :key="row.id"
 								:style="{ background: idx % 2 === 1 ? alt('50') : 'transparent', borderColor: alt('100') }">
-								<td class="tp-td-bold" :style="{ color: ink(9) }">{{ row.name }}</td>
-								<td :style="{ color: ink(5) }">{{ row.contact }}</td>
+								<td class="tp-td-bold" :style="{ color: ink(9) }">{{ row.name }} <span v-if="idx===0" class="tp-shade-ref">ink-9</span></td>
+								<td :style="{ color: ink(5) }">{{ row.contact }} <span v-if="idx===0" class="tp-shade-ref">ink-5</span></td>
 								<td>
 									<span class="tp-badge" :style="badgeStyle(row.status)">{{ row.status }}</span>
 								</td>
@@ -112,9 +142,9 @@
 
 			<!-- 4. FORM SECTION -->
 			<div class="tp-form-wrapper" :style="{ background: surfPanel, borderColor: alt('200') }">
-				<h3 class="tp-section-title" :style="{ color: ink(8) }">Quick Entry Form</h3>
+				<h3 class="tp-section-title" :style="{ color: ink(8) }">Quick Entry Form <span class="tp-shade-ref">ink-8</span></h3>
 				<div class="tp-form-group">
-					<label class="tp-label" :style="{ color: ink(7) }">Company Name</label>
+					<label class="tp-label" :style="{ color: ink(7) }">Company Name <span class="tp-shade-ref">ink-7</span></label>
 					<input type="text" placeholder="Enter company name…" class="tp-input"
 						:style="inputStyle" />
 				</div>
@@ -138,8 +168,8 @@
 					</label>
 				</div>
 				<div class="tp-btn-row">
-					<button class="tp-btn-primary" :style="{ background: pri('600'), fontWeight: btnWeight }">Save Entry</button>
-					<button class="tp-btn-outline" :style="{ borderColor: alt('300'), color: ink(7) }">Cancel</button>
+					<button class="tp-btn-primary" :style="{ background: pri('600'), fontWeight: btnWeight }">Save Entry <span class="tp-shade-ref" style="color:rgba(255,255,255,0.6)">bg: pri-600</span></button>
+					<button class="tp-btn-outline" :style="{ borderColor: alt('300'), color: ink(7) }">Cancel <span class="tp-shade-ref">ink-7 / border: alt-300</span></button>
 				</div>
 			</div>
 		</div>
@@ -610,6 +640,15 @@ onBeforeUnmount(() => {
 .tp-dark-desc { font-size: 13px; margin-top: 4px; }
 .tp-dark-desc code { font-family: monospace; padding: 1px 4px; }
 .tp-semantic-row { margin-top: 12px; display: flex; gap: 12px; font-size: 13px; }
+
+.tp-strip-label { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+.tp-strip-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.tp-strip-swatch { flex: 1; min-width: 70px; height: 54px; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.tp-strip-shade { font-size: 12px; font-weight: 600; }
+.tp-strip-hex { font-size: 9px; font-weight: 400; letter-spacing: 0.02em; }
+
+.tp-shade-ref { font-size: 9px; font-weight: 400; opacity: 0.55; margin-left: 2px; font-style: italic; }
+.tp-shade-tag { display: block; font-size: 9px; font-weight: 400; opacity: 0.45; margin-bottom: 4px; font-style: italic; }
 
 .tp-palette-section { }
 .tp-palette-label { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
