@@ -4371,6 +4371,7 @@
         if (colorPickers.shared) {
             const hsv = paletteHSV[paletteId];
             colorPickers.shared.loadHSV(hsv.h, hsv.s, hsv.v);
+            colorPickers.shared.updateBumpIndicator();
         }
 
         panel.classList.remove('hidden');
@@ -4734,23 +4735,14 @@
     }
     
     function updateBumpButtons() {
-        const shades = CONFIG.primaryShades.map(s => s.shade);
-        const lighterBtn = document.getElementById('anchorBumpLeft');
-        const darkerBtn = document.getElementById('anchorBumpRight');
-        
-        if (!lighterBtn || !darkerBtn) return;
-        
-        if (state.anchorShade && state.anchorHex) {
-            // Anchor mode: check shade position
-            const currentIdx = shades.indexOf(state.anchorShade);
-            lighterBtn.disabled = (currentIdx >= shades.length - 1);  // Can't go lighter when at 900
-            darkerBtn.disabled = (currentIdx <= 0);  // Can't go darker when at 50
-        } else {
-            // Offset mode: check offset bounds
-            const offset = state.shadeOffset || 0;
-            lighterBtn.disabled = (offset <= -5);
-            darkerBtn.disabled = (offset >= 5);
-        }
+        // No-op: bump button state now managed by picker via updatePickerBumpIndicator
+    }
+
+    function bumpAlternate(direction) {
+        state.alternateOffset = (state.alternateOffset || 0) + direction;
+        state.alternateOffset = Math.max(-5, Math.min(5, state.alternateOffset));
+        updateUI();
+        refreshAllSwatchPickers();
     }
     
     function clearAnchor() {
@@ -5323,6 +5315,38 @@
             }
 
             el('[data-role="apply-btn"]').onclick = () => onApply(el('[data-role="hex-input"]').value);
+
+            // Wire bump-lighter / bump-darker buttons
+            const bumpLighterBtn = el('[data-role="bump-lighter"]');
+            const bumpDarkerBtn = el('[data-role="bump-darker"]');
+            if (bumpLighterBtn) {
+                bumpLighterBtn.onclick = () => {
+                    if (activePalette === 'brand') bumpAnchor(1);
+                    else if (activePalette === 'alternate') bumpAlternate(1);
+                    updatePickerBumpIndicator();
+                };
+            }
+            if (bumpDarkerBtn) {
+                bumpDarkerBtn.onclick = () => {
+                    if (activePalette === 'brand') bumpAnchor(-1);
+                    else if (activePalette === 'alternate') bumpAlternate(-1);
+                    updatePickerBumpIndicator();
+                };
+            }
+        }
+
+        function updatePickerBumpIndicator() {
+            const ind = el('[data-role="bump-indicator"]');
+            if (!ind) return;
+            if (activePalette === 'brand') {
+                const val = (state.anchorShade && state.anchorHex) ? state.anchorOffset : state.shadeOffset;
+                ind.textContent = val === 0 ? '0' : `${val}`;
+            } else if (activePalette === 'alternate') {
+                const val = state.alternateOffset || 0;
+                ind.textContent = val === 0 ? '0' : `${val}`;
+            } else {
+                ind.textContent = '--';
+            }
         }
 
         buildGrid();
@@ -5344,6 +5368,7 @@
                 refreshSliderBgs();
             },
             getHSV() { return { h: hsv.h, s: hsv.s, v: hsv.v }; },
+            updateBumpIndicator: updatePickerBumpIndicator,
             panel
         };
         colorPickers[id] = instance;
