@@ -3616,10 +3616,47 @@
             alternateColors[shade.toString()] = getTokenColor(`alternate-${shade}`);
         });
 
+        const semanticObj = {};
+        CONFIG.semanticColors.forEach(({id}) => {
+            const c = state[id];
+            semanticObj[id] = hslToHex(c.h, c.s, c.l);
+        });
+
+        const windowObj = {};
+        CONFIG.windowColors.forEach(({id}) => {
+            const c = state[id];
+            windowObj[id] = hslToHex(c.h, c.s, c.l);
+        });
+
+        const fontStack = [state.uiFont || 'Arial', 'sans-serif'];
+
         const tokens = {
-            "colors": {
-                "primary": primaryColors,
-                "alternate": alternateColors
+            "theme": {
+                "extend": {
+                    "colors": {
+                        "primary": primaryColors,
+                        "alternate": alternateColors
+                    },
+                    "fontFamily": {
+                        "ui": fontStack
+                    }
+                }
+            },
+            "semantic": semanticObj,
+            "window": windowObj,
+            "surface": {
+                "page": getTokenColor(state.pageBg || 'alternate-100') || '#FFFFFF',
+                "panel": getTokenColor(state.panelBg || 'alternate-200') || '#F5F5F5'
+            },
+            "button": {
+                "defaultShade": state.defaultShade || 400,
+                "outlineShade": state.outlineShade || 500,
+                "textFlipShade": state.textFlipShade || 500,
+                "gradient": {
+                    "enabled": state.gradient.angle !== 'none',
+                    "angle": state.gradient.angle === 'none' ? null : state.gradient.angle
+                },
+                "fontWeight": state.uiFontBold ? 700 : 400
             }
         };
 
