@@ -1,0 +1,7 @@
+{
+  "name": "frappe-theme-editor",
+  "private": true,
+  "dependencies": {
+    "vue": "^3"
+  }
+}

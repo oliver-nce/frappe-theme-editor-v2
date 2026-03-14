@@ -69,7 +69,7 @@ fixtures = [
 	{
 		"doctype": "Page",
 		"filters": [
-			["name", "in", ["theme-editor"]]
+			["name", "in", ["theme-editor", "theme-preview"]]
 		]
 	}
 ]
