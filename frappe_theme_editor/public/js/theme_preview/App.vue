@@ -1,5 +1,5 @@
 <template>
-<div class="tp-root" :style="{ fontFamily: font, background: surfPage }">
+<div class="tp-root" :style="{ fontFamily: font, fontWeight: btnWeight, background: surfPage }">
 
 	<!-- TOOLBAR -->
 	<div class="tp-toolbar" :style="{ background: surfPanel, borderBottom: '1px solid ' + alt('200') }">
@@ -119,21 +119,21 @@
 					<table class="tp-table">
 						<thead>
 							<tr :style="{ background: alt('50') }">
-								<th :style="{ color: ink(6), borderColor: alt('200') }">Company <span class="tp-shade-ref">ink-6 / bg: alt-50</span></th>
-								<th :style="{ color: ink(6), borderColor: alt('200') }">Contact</th>
-								<th :style="{ color: ink(6), borderColor: alt('200') }">Status</th>
-								<th :style="{ color: ink(6), borderColor: alt('200') }" class="text-right">Revenue</th>
+								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }">Company <span class="tp-shade-ref">ink-6 / bg: alt-50</span></th>
+								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }">Contact</th>
+								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }">Status</th>
+								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }" class="text-right">Revenue</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr v-for="(row, idx) in tableData" :key="row.id"
 								:style="{ background: idx % 2 === 1 ? alt('50') : 'transparent', borderColor: alt('100') }">
-								<td class="tp-td-bold" :style="{ color: ink(9) }">{{ row.name }} <span v-if="idx===0" class="tp-shade-ref">ink-9</span></td>
+								<td :style="{ color: ink(9), fontWeight: Math.min(700, btnWeight + 100) }">{{ row.name }} <span v-if="idx===0" class="tp-shade-ref">ink-9</span></td>
 								<td :style="{ color: ink(5) }">{{ row.contact }} <span v-if="idx===0" class="tp-shade-ref">ink-5</span></td>
 								<td>
 									<span class="tp-badge" :style="badgeStyle(row.status)">{{ row.status }}</span>
 								</td>
-								<td class="tp-td-bold text-right" :style="{ color: ink(8) }">{{ row.revenue }}</td>
+								<td class="text-right" :style="{ color: ink(8), fontWeight: Math.min(700, btnWeight + 100) }">{{ row.revenue }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -591,8 +591,7 @@ onBeforeUnmount(() => {
 .tp-table-scroll { max-height: 320px; overflow-y: auto; }
 .tp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tp-table th, .tp-table td { padding: 10px 20px; text-align: left; border-bottom: 1px solid; }
-.tp-table th { font-weight: 600; letter-spacing: 0.02em; position: sticky; top: 0; }
-.tp-td-bold { font-weight: 500; }
+.tp-table th { letter-spacing: 0.02em; position: sticky; top: 0; }
 .text-right { text-align: right; }
 .tp-sm-btn { padding: 4px 12px; border: 1px solid; border-radius: 6px; font-size: 13px; cursor: pointer; background: transparent; }
 .tp-badge { padding: 2px 10px; border-radius: 9999px; font-size: 12px; font-weight: 500; display: inline-block; }
