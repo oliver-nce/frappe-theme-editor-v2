@@ -4,28 +4,28 @@
 	<!-- TOOLBAR -->
 	<div class="tp-toolbar" :style="{ background: surfPanel, borderBottom: '1px solid ' + alt('200') }">
 		<div class="tp-toolbar-left">
-			<h2 class="tp-title" :style="{ color: alt('900') }">Theme Preview</h2>
+			<h2 class="tp-title" :style="{ color: ink(9) }">Theme Preview</h2>
 			<span v-if="previewSource === 'editor'" class="tp-badge-preview"
 				:style="{ background: pri('100'), color: pri('700') }">
 				Previewing from Editor (unsaved)
 			</span>
-			<span v-else class="tp-subtitle" :style="{ color: alt('500') }">
+			<span v-else class="tp-subtitle" :style="{ color: ink(5) }">
 				{{ themeMode === 'default' ? 'Frappe Defaults' : 'Custom Theme' }}
 			</span>
 		</div>
 		<div class="tp-toolbar-right">
 			<button v-if="previewSource === 'editor'" class="tp-dismiss-btn" @click="dismissPreview"
-				:style="{ borderColor: alt('300'), color: alt('700') }">
+				:style="{ borderColor: alt('300'), color: ink(7) }">
 				Dismiss Preview
 			</button>
 			<select v-if="themes.length && previewSource !== 'editor'" v-model="selectedThemeName" class="tp-select"
-				:style="{ borderColor: alt('300'), color: alt('700'), background: surfPanel }">
+				:style="{ borderColor: alt('300'), color: ink(7), background: surfPanel }">
 				<option v-for="t in themes" :key="t.name" :value="t.name">{{ t.theme_name }}</option>
 			</select>
 			<button class="tp-toggle-btn" @click="toggleMode" :disabled="!customTokens"
 				:style="{
 					background: themeMode === 'custom' ? pri('600') : alt('200'),
-					color: themeMode === 'custom' ? '#fff' : alt('700'),
+					color: themeMode === 'custom' ? '#fff' : ink(7),
 					fontWeight: btnWeight
 				}">
 				{{ themeMode === 'default' ? 'Apply Custom Theme' : 'Show Defaults' }}
@@ -33,7 +33,7 @@
 		</div>
 	</div>
 
-	<div v-if="loading" class="tp-loading" :style="{ color: alt('500') }">Loading themes…</div>
+	<div v-if="loading" class="tp-loading" :style="{ color: ink(5) }">Loading themes…</div>
 
 	<div v-else class="tp-content">
 
@@ -59,8 +59,8 @@
 				:style="{ background: surfPanel, borderColor: alt('200'), boxShadow: '0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1)' }">
 				<div class="tp-kpi-top">
 					<div>
-						<p class="tp-kpi-label" :style="{ color: alt('500') }">{{ card.label }}</p>
-						<p class="tp-kpi-value" :style="{ color: alt('900') }">{{ card.value }}</p>
+						<p class="tp-kpi-label" :style="{ color: ink(5) }">{{ card.label }}</p>
+						<p class="tp-kpi-value" :style="{ color: ink(9) }">{{ card.value }}</p>
 					</div>
 					<div class="tp-kpi-icon" :style="{ background: pri('100') }">
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -72,7 +72,7 @@
 				<div class="tp-kpi-bottom">
 					<span class="tp-kpi-change"
 						:style="{ color: card.positive ? sem('success') : sem('danger') }">{{ card.change }}</span>
-					<span class="tp-kpi-vs" :style="{ color: alt('400') }">vs last month</span>
+					<span class="tp-kpi-vs" :style="{ color: ink(4) }">vs last month</span>
 				</div>
 			</div>
 		</div>
@@ -81,7 +81,7 @@
 			<!-- 3. DATA TABLE -->
 			<div class="tp-table-wrapper" :style="{ background: surfPanel, borderColor: alt('200') }">
 				<div class="tp-section-header">
-					<h3 class="tp-section-title" :style="{ color: alt('800') }">Recent Accounts</h3>
+					<h3 class="tp-section-title" :style="{ color: ink(8) }">Recent Accounts</h3>
 					<button class="tp-sm-btn"
 						:style="{ color: pri('600'), borderColor: pri('200'), background: pri('50') }">View All</button>
 				</div>
@@ -89,21 +89,21 @@
 					<table class="tp-table">
 						<thead>
 							<tr :style="{ background: alt('50') }">
-								<th :style="{ color: alt('600'), borderColor: alt('200') }">Company</th>
-								<th :style="{ color: alt('600'), borderColor: alt('200') }">Contact</th>
-								<th :style="{ color: alt('600'), borderColor: alt('200') }">Status</th>
-								<th :style="{ color: alt('600'), borderColor: alt('200') }" class="text-right">Revenue</th>
+								<th :style="{ color: ink(6), borderColor: alt('200') }">Company</th>
+								<th :style="{ color: ink(6), borderColor: alt('200') }">Contact</th>
+								<th :style="{ color: ink(6), borderColor: alt('200') }">Status</th>
+								<th :style="{ color: ink(6), borderColor: alt('200') }" class="text-right">Revenue</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr v-for="(row, idx) in tableData" :key="row.id"
 								:style="{ background: idx % 2 === 1 ? alt('50') : 'transparent', borderColor: alt('100') }">
-								<td class="tp-td-bold" :style="{ color: alt('900') }">{{ row.name }}</td>
-								<td :style="{ color: alt('500') }">{{ row.contact }}</td>
+								<td class="tp-td-bold" :style="{ color: ink(9) }">{{ row.name }}</td>
+								<td :style="{ color: ink(5) }">{{ row.contact }}</td>
 								<td>
 									<span class="tp-badge" :style="badgeStyle(row.status)">{{ row.status }}</span>
 								</td>
-								<td class="tp-td-bold text-right" :style="{ color: alt('800') }">{{ row.revenue }}</td>
+								<td class="tp-td-bold text-right" :style="{ color: ink(8) }">{{ row.revenue }}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -112,72 +112,72 @@
 
 			<!-- 4. FORM SECTION -->
 			<div class="tp-form-wrapper" :style="{ background: surfPanel, borderColor: alt('200') }">
-				<h3 class="tp-section-title" :style="{ color: alt('800') }">Quick Entry Form</h3>
+				<h3 class="tp-section-title" :style="{ color: ink(8) }">Quick Entry Form</h3>
 				<div class="tp-form-group">
-					<label class="tp-label" :style="{ color: alt('700') }">Company Name</label>
+					<label class="tp-label" :style="{ color: ink(7) }">Company Name</label>
 					<input type="text" placeholder="Enter company name…" class="tp-input"
 						:style="inputStyle" />
 				</div>
 				<div class="tp-form-group">
-					<label class="tp-label" :style="{ color: alt('700') }">Description</label>
+					<label class="tp-label" :style="{ color: ink(7) }">Description</label>
 					<textarea placeholder="Brief description…" rows="3" class="tp-input tp-textarea"
 						:style="{ ...inputStyle, fontStyle: 'italic' }"></textarea>
 				</div>
 				<div class="tp-form-row">
-					<label class="tp-checkbox-label" :style="{ color: alt('700') }">
+					<label class="tp-checkbox-label" :style="{ color: ink(7) }">
 						<input type="checkbox" checked :style="{ accentColor: pri('600') }" />
 						<span>Active account</span>
 					</label>
-					<label class="tp-checkbox-label" :style="{ color: alt('700') }">
+					<label class="tp-checkbox-label" :style="{ color: ink(7) }">
 						<input type="radio" name="priority" checked :style="{ accentColor: pri('600') }" />
 						<span>High priority</span>
 					</label>
-					<label class="tp-checkbox-label" :style="{ color: alt('700') }">
+					<label class="tp-checkbox-label" :style="{ color: ink(7) }">
 						<input type="radio" name="priority" :style="{ accentColor: pri('600') }" />
 						<span>Normal</span>
 					</label>
 				</div>
 				<div class="tp-btn-row">
 					<button class="tp-btn-primary" :style="{ background: pri('600'), fontWeight: btnWeight }">Save Entry</button>
-					<button class="tp-btn-outline" :style="{ borderColor: alt('300'), color: alt('700') }">Cancel</button>
+					<button class="tp-btn-outline" :style="{ borderColor: alt('300'), color: ink(7) }">Cancel</button>
 				</div>
 			</div>
 		</div>
 
 		<!-- 5. TYPOGRAPHY -->
 		<div class="tp-card" :style="{ background: surfPanel, borderColor: alt('200') }">
-			<h3 class="tp-section-title" :style="{ color: alt('800') }">Typography Scale</h3>
+			<h3 class="tp-section-title" :style="{ color: ink(8) }">Typography Scale</h3>
 			<div class="tp-typo-grid">
 				<div v-for="item in typoScale" :key="item.label" class="tp-typo-row">
-					<span class="tp-typo-label" :style="{ color: alt('400') }">{{ item.label }}</span>
-					<span :style="{ fontSize: item.size, fontWeight: item.weight, lineHeight: item.lh, color: alt('900') }">
+					<span class="tp-typo-label" :style="{ color: ink(4) }">{{ item.label }}</span>
+					<span :style="{ fontSize: item.size, fontWeight: item.weight, lineHeight: item.lh, color: ink(9) }">
 						The quick brown fox jumps over the lazy dog
 					</span>
 				</div>
 			</div>
 			<div class="tp-typo-extras">
-				<span :style="{ color: alt('700'), letterSpacing: '-0.025em' }">Tight tracking</span>
-				<span :style="{ color: alt('700'), letterSpacing: '0.05em' }">Wide tracking</span>
-				<span :style="{ color: alt('700'), letterSpacing: '0.1em', textTransform: 'uppercase' }">Widest + uppercase</span>
+				<span :style="{ color: ink(7), letterSpacing: '-0.025em' }">Tight tracking</span>
+				<span :style="{ color: ink(7), letterSpacing: '0.05em' }">Wide tracking</span>
+				<span :style="{ color: ink(7), letterSpacing: '0.1em', textTransform: 'uppercase' }">Widest + uppercase</span>
 				<a href="#" :style="{ color: pri('600'), textDecorationColor: pri('300') }" class="tp-decorated-link">Decorated link</a>
-				<span :style="{ color: alt('500'), opacity: 0.5 }">50% text opacity</span>
+				<span :style="{ color: ink(5), opacity: 0.5 }">50% text opacity</span>
 			</div>
 		</div>
 
 		<!-- 6. SVG ICONS -->
 		<div class="tp-card" :style="{ background: surfPanel, borderColor: alt('200') }">
-			<h3 class="tp-section-title" :style="{ color: alt('800') }">SVG Icons (fill &amp; stroke)</h3>
+			<h3 class="tp-section-title" :style="{ color: ink(8) }">SVG Icons (fill &amp; stroke)</h3>
 			<div class="tp-icons-row">
 				<div v-for="(entry, i) in iconEntries" :key="i" class="tp-icon-item">
 					<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
 						:stroke="pri(entry.shade)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 						<path :d="ICONS[entry.icon]" />
 					</svg>
-					<span class="tp-icon-label" :style="{ color: alt('600') }">{{ entry.label }}</span>
+					<span class="tp-icon-label" :style="{ color: ink(6) }">{{ entry.label }}</span>
 				</div>
 			</div>
 			<div class="tp-filled-row">
-				<span :style="{ color: alt('500') }">Filled variant:</span>
+				<span :style="{ color: ink(5) }">Filled variant:</span>
 				<svg width="24" height="24" viewBox="0 0 24 24" :fill="pri('500')" stroke="none"><path :d="ICONS.star" /></svg>
 				<svg width="24" height="24" viewBox="0 0 24 24" :fill="sem('success')" stroke="none"><path :d="ICONS.check" /></svg>
 				<svg width="24" height="24" viewBox="0 0 24 24" :fill="sem('danger')" stroke="none"><path :d="ICONS.bell" /></svg>
@@ -186,7 +186,7 @@
 
 		<!-- 7. GRADIENTS & OPACITY -->
 		<div class="tp-card" :style="{ background: surfPanel, borderColor: alt('200') }">
-			<h3 class="tp-section-title" :style="{ color: alt('800') }">Gradient &amp; Opacity</h3>
+			<h3 class="tp-section-title" :style="{ color: ink(8) }">Gradient &amp; Opacity</h3>
 			<div class="tp-gradient-strips">
 				<div class="tp-gradient-strip"
 					:style="{ background: 'linear-gradient(to right, ' + pri('400') + ', ' + pri('600') + ', ' + pri('800') + ')' }">
@@ -209,23 +209,23 @@
 
 		<!-- 8. RESPONSIVE BREAKPOINTS -->
 		<div class="tp-card" :style="{ background: surfPanel, borderColor: alt('200') }">
-			<h3 class="tp-section-title" :style="{ color: alt('800') }">Responsive Breakpoints (Frappe UI)</h3>
+			<h3 class="tp-section-title" :style="{ color: ink(8) }">Responsive Breakpoints (Frappe UI)</h3>
 			<div class="tp-breakpoints">
 				<div v-for="bp in breakpoints" :key="bp.label" class="tp-bp-card"
 					:style="{ borderColor: pri('200'), background: pri('50') }">
 					<span class="tp-bp-label" :style="{ color: pri('700') }">{{ bp.label }}:</span>
-					<span :style="{ color: alt('600') }">≥ {{ bp.px }}</span>
-					<span :style="{ color: alt('400') }">{{ bp.desc }}</span>
+					<span :style="{ color: ink(6) }">≥ {{ bp.px }}</span>
+					<span :style="{ color: ink(4) }">{{ bp.desc }}</span>
 				</div>
 			</div>
-			<p class="tp-note" :style="{ color: alt('400') }">
+			<p class="tp-note" :style="{ color: ink(4) }">
 				Note: Frappe UI removes the 2xl (1536px) breakpoint. Mobile-first: base styles apply to all, add sm:/md:/lg:/xl: for larger screens.
 			</p>
 		</div>
 
 		<!-- 9. DARK MODE PANEL -->
 		<div class="tp-card" :style="{ background: surfPanel, borderColor: alt('200') }">
-			<h3 class="tp-section-title" :style="{ color: alt('800') }">Dark Mode Preview</h3>
+			<h3 class="tp-section-title" :style="{ color: ink(8) }">Dark Mode Preview</h3>
 			<div class="tp-dark-panel" data-theme="dark"
 				:style="{ background: alt('900'), borderColor: alt('700') }">
 				<p class="tp-dark-title" :style="{ color: '#F9FAFB' }">Dark surface</p>
@@ -247,9 +247,9 @@
 
 		<!-- COLOR PALETTE REFERENCE -->
 		<div class="tp-card" :style="{ background: surfPanel, borderColor: alt('200') }">
-			<h3 class="tp-section-title" :style="{ color: alt('800') }">Active Color Palette</h3>
+			<h3 class="tp-section-title" :style="{ color: ink(8) }">Active Color Palette</h3>
 			<div class="tp-palette-section">
-				<p class="tp-palette-label" :style="{ color: alt('600') }">Primary</p>
+				<p class="tp-palette-label" :style="{ color: ink(6) }">Primary</p>
 				<div class="tp-swatch-row">
 					<div v-for="s in shades" :key="'p'+s" class="tp-swatch" :style="{ background: pri(s) }">
 						<span :style="{ color: parseInt(s) >= 500 ? '#fff' : alt('900') }">{{ s }}</span>
@@ -257,7 +257,7 @@
 				</div>
 			</div>
 			<div class="tp-palette-section tp-mt-12">
-				<p class="tp-palette-label" :style="{ color: alt('600') }">Alternate</p>
+				<p class="tp-palette-label" :style="{ color: ink(6) }">Alternate</p>
 				<div class="tp-swatch-row">
 					<div v-for="s in shades" :key="'a'+s" class="tp-swatch" :style="{ background: alt(s) }">
 						<span :style="{ color: parseInt(s) >= 500 ? '#fff' : alt('900') }">{{ s }}</span>
@@ -289,7 +289,7 @@ const FRAPPE_DEFAULTS = {
 	fontFamily: ['InterVar', 'Inter', 'sans-serif'],
 	semantic: { success: '#46B37E', warning: '#E79913', danger: '#E03636', info: '#0289F7' },
 	surface: { page: '#F8F8F8', panel: '#FFFFFF' },
-	button: { defaultShade: 500, fontWeight: 600 }
+	button: { defaultShade: 500 }
 };
 
 const ICONS = {
@@ -321,12 +321,13 @@ const palette = computed(() => {
 			primary: colors.primary || FRAPPE_DEFAULTS.primary,
 			alternate: colors.alternate || FRAPPE_DEFAULTS.alternate,
 			fontFamily: t.theme?.extend?.fontFamily?.ui || FRAPPE_DEFAULTS.fontFamily,
+			fontWeight: t.theme?.extend?.fontWeight || 400,
 			semantic: t.semantic || FRAPPE_DEFAULTS.semantic,
 			surface: t.surface || FRAPPE_DEFAULTS.surface,
 			button: t.button || FRAPPE_DEFAULTS.button
 		};
 	}
-	return FRAPPE_DEFAULTS;
+	return { ...FRAPPE_DEFAULTS, fontWeight: 400 };
 });
 
 const pri = (shade) => palette.value.primary[shade] || '#888';
@@ -335,20 +336,30 @@ const sem = (key) => palette.value.semantic[key] || '#888';
 const font = computed(() => palette.value.fontFamily.join(', '));
 const surfPage = computed(() => palette.value.surface.page);
 const surfPanel = computed(() => palette.value.surface.panel);
-const btnWeight = computed(() => palette.value.button.fontWeight || 600);
+const btnWeight = computed(() => palette.value.fontWeight || 400);
+
+// Ink: text colors sourced from theme tokens, falling back to alternate palette
+function ink(level) {
+	if (themeMode.value === 'custom' && customTokens.value?.ink) {
+		const val = customTokens.value.ink['gray-' + level];
+		if (val) return val;
+	}
+	return alt(INK_TO_SHADE[level] || '500');
+}
+const INK_TO_SHADE = { 1:'200', 2:'300', 3:'400', 4:'500', 5:'600', 6:'700', 7:'700', 8:'800', 9:'900' };
 
 const inputStyle = computed(() => ({
 	borderColor: alt('300'),
-	color: alt('900'),
+	color: ink(9),
 	caretColor: pri('500'),
 	'--ring-color': pri('400'),
-	'--placeholder-color': alt('400')
+	'--placeholder-color': ink(4)
 }));
 
 function badgeStyle(status) {
 	if (status === 'Active') return { background: sem('success') + '1a', color: sem('success') };
 	if (status === 'Pending') return { background: sem('warning') + '1a', color: sem('warning') };
-	return { background: alt('200'), color: alt('500') };
+	return { background: alt('200'), color: ink(5) };
 }
 
 const kpiCards = [
