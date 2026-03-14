@@ -455,7 +455,10 @@ async function fetchThemes() {
 		themes.value = r.message || [];
 		if (themes.value.length > 0) {
 			selectedThemeName.value = themes.value[0].name;
-			await loadThemeTokens(themes.value[0].name);
+			// Only load DB tokens if we're NOT showing an editor preview
+			if (previewSource.value !== 'editor') {
+				await loadThemeTokens(themes.value[0].name);
+			}
 		}
 	} catch (e) {
 		console.error('Failed to fetch themes:', e);
