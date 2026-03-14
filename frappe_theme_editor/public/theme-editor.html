@@ -821,7 +821,7 @@
             transform: translate(-50%, -50%);
             z-index: 1000;
             width: auto;
-            min-width: 1100px;  /* Wide enough for both pickers */
+            min-width: 560px;
             max-width: 95vw;
             max-height: 90vh;
             overflow-y: auto;
@@ -1210,38 +1210,20 @@
             }
         }
 
-        /* COMBINED COLOR PICKERS LAYOUT */
-        .color-pickers-combined {
-            display: flex;
-            gap: 24px;
-            align-items: stretch;
-            flex-wrap: nowrap;
-        }
-        .picker-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex: 1 1 0;
-        }
+        /* COLOR PICKER PANEL */
         .color-picker-panel {
-            flex: 1 1 auto;
             display: flex;
             flex-direction: column;
         }
         .color-picker-panel .picker-layout {
             flex: 1;
         }
-        .picker-label {
-            display: block;
-            font-weight: 500;
-            font-size: 14px;
+        .picker-popup-title {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
             color: #333;
-        }
-
-        @media (max-width: 900px) {
-            .color-pickers-combined {
-                flex-direction: column;
-            }
+            padding-left: 2px;
         }
 
         /* TEXT FLIP THRESHOLD SELECTOR */
@@ -2125,34 +2107,25 @@
         <!-- Primary Colors -->
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title" data-action="toggle-editor" data-target="primary" style="cursor: pointer;">Primary Colors (<span id="primaryLabel">Blue</span> Scale) <span class="click-to-edit">Click to Edit</span></h2>
+                <h2 class="section-title" data-action="open-picker" data-target="brand" style="cursor: pointer;">Primary Colors (<span id="primaryLabel">Blue</span> Scale) <span class="click-to-edit">Click to Edit</span></h2>
             </div>
             <div class="color-grid" id="primaryGrid"></div>
             <div id="anchorLegend" style="font-size: 11px; color: #888; margin-top: 4px; display: none;">* = This is your designated brand color</div>
 
-            <div class="editor-panel-overlay hidden" id="editor-overlay" data-action="toggle-editor" data-target="primary"></div>
+            <div class="editor-panel-overlay hidden" id="editor-overlay" data-action="close-picker"></div>
             <div class="editor-panel hidden" id="editor-primary">
                 <div class="editor-drag-handle" id="editorDragHandle"></div>
-                <button class="close-editor" data-action="toggle-editor" data-target="primary">✕</button>
+                <button class="close-editor" data-action="close-picker">✕</button>
+                <h3 class="picker-popup-title" id="pickerPopupTitle">Brand Color</h3>
                 <div class="editor-row">
                     <div class="editor-col" style="flex: 0 0 auto;">
-                        <!-- Safari: native picker row (hidden but accessible) -->
                         <div class="brand-input-row" id="safariPickerRow">
                             <input type="color" class="color-picker-btn" id="brandColorPicker" value="#888888">
                             <input type="text" class="hex-input" id="brandHexInput" placeholder="Paste hex" maxlength="7">
                             <button class="btn-apply-hex" id="applyBrandHex">Apply</button>
                         </div>
-                        
-                        <!-- Combined Color Pickers: Brand + Alternate side by side -->
-                        <div class="color-pickers-combined">
-                            <div class="picker-wrapper" data-picker="brand">
-                                <label class="picker-label">Brand Color</label>
-                                <div class="color-picker-panel"></div>
-                            </div>
-                            <div class="picker-wrapper" data-picker="alternate">
-                                <label class="picker-label">Alternate Color</label>
-                                <div class="color-picker-panel"></div>
-                            </div>
+                        <div data-picker="shared">
+                            <div class="color-picker-panel"></div>
                         </div>
                     </div>
                 </div>
@@ -2162,9 +2135,9 @@
         <!-- Alternate Colors -->
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title" data-action="toggle-editor" data-target="primary" style="cursor: pointer;">Alternate Colors (<span id="alternateLabel">Cool</span> Gray) <span class="click-to-edit">Click to Edit</span></h2>
+                <h2 class="section-title" data-action="open-picker" data-target="alternate" style="cursor: pointer;">Alternate Colors (<span id="alternateLabel">Cool</span> Gray) <span class="click-to-edit">Click to Edit</span></h2>
             </div>
-            <div class="color-grid" id="alternateGrid" data-action="toggle-editor" data-target="primary" style="cursor: pointer;"></div>
+            <div class="color-grid" id="alternateGrid" data-action="open-picker" data-target="alternate" style="cursor: pointer;"></div>
         </div>
         
         <!-- Semantic Colors, Window Controls, Backgrounds & Typography (side by side) -->
@@ -2314,8 +2287,6 @@
         
         // Editor panels
         editorPanel: null,
-        colorPickerPanel: null,
-        alternatePickerPanel: null,
         scaleBumpPanel: null,
         
         // Color grids
@@ -2341,7 +2312,6 @@
         // Initialize cache - called after DOM is ready
         init() {
             this.editorPanel = document.getElementById('editorPanel');
-            this.colorPickerPanel = document.getElementById('colorPickerPanel');
             this.scaleBumpPanel = document.getElementById('scaleBumpPanel');
             
             this.primaryGrid = document.getElementById('primaryGrid');
@@ -2387,9 +2357,12 @@
                 switchSubtab(targetId || value);
                 break;
                 
-            // Editor actions
-            case 'toggle-editor':
-                toggleEditor(targetId);
+            // Picker popup actions
+            case 'open-picker':
+                openPicker(targetId);
+                break;
+            case 'close-picker':
+                closePicker();
                 break;
                 
             // Swatch picker actions
@@ -3746,10 +3719,9 @@
     // ═══════════════════════════════════════════════════════════════════════════
     
     function createScaleSwatch(prefix, shade, hex) {
-        // Both primary and alternate swatches open the primary editor (which contains both pickers)
-        const editorTarget = 'primary';
+        const pickerTarget = prefix === 'primary' ? 'brand' : 'alternate';
         return `
-            <div class="color-swatch clickable" data-action="toggle-editor" data-target="${editorTarget}">
+            <div class="color-swatch clickable" data-action="open-picker" data-target="${pickerTarget}">
                 <div class="color-box">
                     <div class="color-box-bg" id="bg-${prefix}-${shade}" style="background:${hex}"></div>
                 </div>
@@ -4103,18 +4075,47 @@
     // EVENT HANDLERS
     // ═══════════════════════════════════════════════════════════════════════════
     
-    function toggleEditor(type) {
-        const panel = document.getElementById('editor-' + type);
+    let activePalette = null;
+    const paletteHSV = {
+        brand:     { h: 210, s: 85, v: 94 },
+        alternate: { h: 210, s: 10, v: 60 }
+    };
+
+    function openPicker(paletteId) {
+        const panel = document.getElementById('editor-primary');
         const overlay = document.getElementById('editor-overlay');
-        panel.classList.toggle('hidden');
-        if (overlay) overlay.classList.toggle('hidden');
-        
-        // Reset position to center when opening
-        if (!panel.classList.contains('hidden')) {
-            panel.style.top = '50%';
-            panel.style.left = '50%';
-            panel.style.transform = 'translate(-50%, -50%)';
+        activePalette = paletteId;
+
+        const title = document.getElementById('pickerPopupTitle');
+        if (title) title.textContent = paletteId === 'brand' ? 'Brand Color' : 'Alternate Color';
+
+        const applyBtn = panel.querySelector('[data-role="apply-btn"]');
+        if (applyBtn) applyBtn.textContent = paletteId === 'brand' ? 'Apply as Brand Color' : 'Apply as Alternate Color';
+
+        if (colorPickers.shared) {
+            const hsv = paletteHSV[paletteId];
+            colorPickers.shared.loadHSV(hsv.h, hsv.s, hsv.v);
         }
+
+        panel.classList.remove('hidden');
+        if (overlay) overlay.classList.remove('hidden');
+        panel.style.top = '50%';
+        panel.style.left = '50%';
+        panel.style.transform = 'translate(-50%, -50%)';
+    }
+
+    function closePicker() {
+        const panel = document.getElementById('editor-primary');
+        const overlay = document.getElementById('editor-overlay');
+
+        if (activePalette && colorPickers.shared) {
+            const currentHSV = colorPickers.shared.getHSV();
+            paletteHSV[activePalette] = { ...currentHSV };
+        }
+
+        panel.classList.add('hidden');
+        if (overlay) overlay.classList.add('hidden');
+        activePalette = null;
     }
     
     // Draggable modal functionality
@@ -4757,8 +4758,6 @@
         const svgCopy = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
         const svgEye = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4"/></svg>';
 
-        const applyLabel = id === 'brand' ? 'Apply as Brand Color' : 'Apply as Alternate Color';
-
         panel.innerHTML = `
             <div class="picker-layout">
                 <div class="picker-left-col">
@@ -4800,7 +4799,7 @@
                             <input type="number" data-role="val-num" min="0" max="100" value="94">
                         </div>
                     </div>
-                    <button class="picker-apply-btn" data-role="apply-btn">${applyLabel}</button>
+                    <button class="picker-apply-btn" data-role="apply-btn">Apply</button>
                 </div>
             </div>`;
 
@@ -4922,6 +4921,12 @@
                 refreshSliderBgs();
             },
             getHex() { return hsvToHex(hsv.h, hsv.s, hsv.v); },
+            loadHSV(h, s, v) {
+                hsv = { h, s, v };
+                refreshUI(false);
+                refreshSliderBgs();
+            },
+            getHSV() { return { h: hsv.h, s: hsv.s, v: hsv.v }; },
             panel
         };
         colorPickers[id] = instance;
@@ -4929,7 +4934,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // INSTANTIATE BOTH PICKERS
+    // INSTANTIATE SHARED PICKER
     // ═══════════════════════════════════════════════════════════════════════════
 
     const safariRow = document.getElementById('safariPickerRow');
@@ -4941,38 +4946,43 @@
         safariRow.style.padding = '0';
     }
 
-    createColorPicker('brand', (hex) => {
-        document.getElementById('brandHexInput').value = hex;
-        applyBrandHex();
-    });
-
-    createColorPicker('alternate', (hex) => {
-        const hsl = hexToHSL(hex);
-        state.alternateHue = hsl.h;
-        state.alternateSat = hsl.s;
-        state.alternateAnchorHex = hex.toUpperCase();
-        state.alternateAnchorL = hsl.l;
-        state.alternateOffset = 0;
-        updateUI();
+    createColorPicker('shared', (hex) => {
+        if (activePalette === 'brand') {
+            document.getElementById('brandHexInput').value = hex;
+            applyBrandHex();
+        } else if (activePalette === 'alternate') {
+            const hsl = hexToHSL(hex);
+            state.alternateHue = hsl.h;
+            state.alternateSat = hsl.s;
+            state.alternateAnchorHex = hex.toUpperCase();
+            state.alternateAnchorL = hsl.l;
+            state.alternateOffset = 0;
+            updateUI();
+        }
+        if (activePalette && colorPickers.shared) {
+            paletteHSV[activePalette] = colorPickers.shared.getHSV();
+        }
     });
 
     // Load default theme, then update UI
     loadDefaultTheme().then(() => {
         updateUI();
 
-        // Sync brand picker with current primary-500
+        // Store brand HSV from current primary-500
         const currentColor = getTokenColor('primary-500');
-        if (!state.anchorHex && colorPickers.brand) {
+        if (!state.anchorHex) {
             document.getElementById('brandColorPicker').value = currentColor;
-            colorPickers.brand.setHex(currentColor);
+        }
+        if (/^#[0-9A-Fa-f]{6}$/.test(currentColor)) {
+            paletteHSV.brand = hexToHSV(currentColor);
         }
 
-        // Sync alternate picker with current alternate-500
+        // Store alternate HSV from current alternate-500
         const altColor = getTokenColor('alternate-500');
-        if (colorPickers.alternate) {
-            colorPickers.alternate.setHex(altColor);
+        if (/^#[0-9A-Fa-f]{6}$/.test(altColor)) {
+            paletteHSV.alternate = hexToHSV(altColor);
         }
-        
+
         updateBumpButtons();
         console.log('Theme editor initialized');
     });
