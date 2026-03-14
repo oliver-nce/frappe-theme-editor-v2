@@ -25,6 +25,14 @@ class Theme(Document):
         if not alternate.get("shades"):
             frappe.throw("Theme must have designSystem.alternate.shades")
 
+        for field in ("w3c_tokens", "vue_tokens"):
+            value = getattr(self, field, None)
+            if value:
+                try:
+                    json.loads(value)
+                except json.JSONDecodeError:
+                    frappe.throw(f"Invalid JSON in {field}")
+
         if self.is_default:
             frappe.db.sql(
                 """UPDATE `tabTheme` SET is_default = 0 WHERE name != %s""",
@@ -96,36 +104,42 @@ def set_default_theme(name):
 
 @frappe.whitelist()
 def get_theme(name):
-    """Get a specific theme's full data."""
+    """Get a specific theme's full data including token formats."""
     theme = frappe.get_doc("Theme", name)
     return {
         "name": theme.name,
         "theme_name": theme.theme_name,
         "description": theme.description,
         "is_default": theme.is_default,
-        "json_data": theme.json_data
+        "json_data": theme.json_data,
+        "w3c_tokens": theme.w3c_tokens or "",
+        "vue_tokens": theme.vue_tokens or ""
     }
 
 
 @frappe.whitelist()
-def save_theme(theme_name, description, json_data):
+def save_theme(theme_name, description, json_data, w3c_tokens=None, vue_tokens=None):
     """Create a new theme."""
     theme = frappe.get_doc({
         "doctype": "Theme",
         "theme_name": theme_name,
         "description": description,
-        "json_data": json_data
+        "json_data": json_data,
+        "w3c_tokens": w3c_tokens or "",
+        "vue_tokens": vue_tokens or ""
     })
     theme.insert()
     return theme.name
 
 
 @frappe.whitelist()
-def update_theme(name, description, json_data):
+def update_theme(name, description, json_data, w3c_tokens=None, vue_tokens=None):
     """Update an existing theme."""
     theme = frappe.get_doc("Theme", name)
     theme.description = description
     theme.json_data = json_data
+    theme.w3c_tokens = w3c_tokens or ""
+    theme.vue_tokens = vue_tokens or ""
     theme.save()
     return theme.name
 

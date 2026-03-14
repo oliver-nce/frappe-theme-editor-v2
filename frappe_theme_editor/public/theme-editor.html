@@ -3217,13 +3217,17 @@
             
             try {
                 const jsonData = exportThemeJSON();
+                const w3cTokens = exportW3CTokens();
+                const vueTokens = exportVueTokens();
                 
                 await frappe.call({
                     method: 'frappe_theme_editor.frappe_theme_editor.doctype.theme.theme.save_theme',
                     args: {
                         theme_name: name,
                         description: description,
-                        json_data: jsonData
+                        json_data: jsonData,
+                        w3c_tokens: w3cTokens,
+                        vue_tokens: vueTokens
                     },
                     callback: function(r) {
                         if (r.message) {
@@ -3256,13 +3260,17 @@
         
         try {
             const jsonData = exportThemeJSON();
+            const w3cTokens = exportW3CTokens();
+            const vueTokens = exportVueTokens();
             
             await frappe.call({
                 method: 'frappe_theme_editor.frappe_theme_editor.doctype.theme.theme.update_theme',
                 args: {
                     name: currentTheme.name,
                     description: currentTheme.description || '',
-                    json_data: jsonData
+                    json_data: jsonData,
+                    w3c_tokens: w3cTokens,
+                    vue_tokens: vueTokens
                 },
                 callback: function(r) {
                     if (r.message) {
@@ -3430,20 +3438,44 @@
                 args: { name: themeName },
                 callback: function(r) {
                     if (r.message) {
-                        const jsonData = JSON.stringify(JSON.parse(r.message.json_data), null, 2);
-                        
+                        const formats = {
+                            editor: JSON.stringify(JSON.parse(r.message.json_data), null, 2),
+                            w3c: r.message.w3c_tokens ? JSON.stringify(JSON.parse(r.message.w3c_tokens), null, 2) : '(not yet generated)',
+                            vue: r.message.vue_tokens ? JSON.stringify(JSON.parse(r.message.vue_tokens), null, 2) : '(not yet generated)'
+                        };
+
+                        const tabStyle = 'display:inline-block;padding:6px 14px;cursor:pointer;border:1px solid #ddd;border-bottom:none;border-radius:6px 6px 0 0;font-size:13px;background:#f5f5f5;margin-right:2px;';
+                        const activeStyle = tabStyle + 'background:white;font-weight:600;border-bottom:1px solid white;margin-bottom:-1px;position:relative;z-index:1;';
+
                         document.getElementById('modalContent').innerHTML = `
                             <div class="modal-title">Theme JSON: ${r.message.theme_name}</div>
-                            <pre style="max-height: 400px; overflow-y: auto; background: #f5f5f5; padding: 16px; border-radius: 6px; font-size: 12px;">${jsonData}</pre>
+                            <div id="jsonFormatTabs" style="border-bottom:1px solid #ddd;margin-bottom:0;">
+                                <span class="json-tab" data-format="editor" style="${activeStyle}">Editor</span>
+                                <span class="json-tab" data-format="w3c" style="${tabStyle}">W3C Tokens</span>
+                                <span class="json-tab" data-format="vue" style="${tabStyle}">Vue / Tailwind</span>
+                            </div>
+                            <pre id="jsonPreview" style="max-height:400px;overflow-y:auto;background:#f5f5f5;padding:16px;border-radius:0 0 6px 6px;font-size:12px;border:1px solid #ddd;border-top:none;margin-top:0;">${formats.editor}</pre>
                             <div class="modal-buttons">
                                 <button class="btn btn-secondary" data-action="close-modal">Close</button>
-                                <button class="btn btn-primary" data-action="copy-json">Copy to Clipboard</button>
+                                <button class="btn btn-primary" id="copyJsonBtn">Copy to Clipboard</button>
                             </div>
                         `;
-                        
-                        document.querySelector('[data-action="copy-json"]').addEventListener('click', () => {
-                            navigator.clipboard.writeText(jsonData);
-                            showNotification('JSON copied to clipboard');
+
+                        let activeFormat = 'editor';
+                        const pre = document.getElementById('jsonPreview');
+
+                        document.getElementById('jsonFormatTabs').addEventListener('click', (e) => {
+                            const tab = e.target.closest('.json-tab');
+                            if (!tab) return;
+                            activeFormat = tab.dataset.format;
+                            pre.textContent = formats[activeFormat];
+                            document.querySelectorAll('.json-tab').forEach(t => t.style.cssText = tabStyle);
+                            tab.style.cssText = activeStyle;
+                        });
+
+                        document.getElementById('copyJsonBtn').addEventListener('click', () => {
+                            navigator.clipboard.writeText(formats[activeFormat]);
+                            showNotification(`${activeFormat === 'editor' ? 'Editor' : activeFormat === 'w3c' ? 'W3C' : 'Vue'} JSON copied to clipboard`);
                         });
                         
                         document.getElementById('modalOverlay').classList.add('show');
@@ -3507,6 +3539,91 @@
         };
         
         return JSON.stringify(theme, null, 2);
+    }
+
+    function exportW3CTokens() {
+        const themeName = currentTheme ? currentTheme.theme_name : 'NCE Theme';
+
+        const primaryGroup = { "$type": "color" };
+        CONFIG.primaryShades.forEach(({shade}) => {
+            primaryGroup[shade.toString()] = { "$value": getTokenColor(`primary-${shade}`) };
+        });
+
+        const alternateGroup = { "$type": "color" };
+        CONFIG.alternateShades.forEach(({shade}) => {
+            alternateGroup[shade.toString()] = { "$value": getTokenColor(`alternate-${shade}`) };
+        });
+
+        const semantic = {};
+        CONFIG.semanticColors.forEach(({id}) => {
+            const c = state[id];
+            semantic[id] = { "$type": "color", "$value": hslToHex(c.h, c.s, c.l) };
+        });
+
+        const windowCtrl = {};
+        CONFIG.windowColors.forEach(({id}) => {
+            const c = state[id];
+            windowCtrl[id] = { "$type": "color", "$value": hslToHex(c.h, c.s, c.l) };
+        });
+
+        const bgShade = state.pageBg || 'alternate-100';
+        const bgHex = getTokenColor(bgShade) || '#FFFFFF';
+
+        const tokens = {
+            "$name": themeName,
+            "$version": "1.0",
+            "color": {
+                "primary": primaryGroup,
+                "alternate": alternateGroup,
+                "semantic": semantic,
+                "window": windowCtrl,
+                "background": {
+                    "page":  { "$type": "color", "$value": bgHex },
+                    "panel": { "$type": "color", "$value": getTokenColor(state.panelBg || 'alternate-200') || '#F5F5F5' }
+                }
+            },
+            "typography": {
+                "fontFamily": {
+                    "$type": "fontFamily",
+                    "$value": state.uiFont || 'Arial'
+                },
+                "fontWeight": {
+                    "$type": "fontWeight",
+                    "$value": state.uiFontBold ? 700 : 400
+                }
+            },
+            "gradient": {
+                "angle": { "$type": "dimension", "$value": state.gradient.angle === 'none' ? 'none' : `${state.gradient.angle}deg` },
+                "stops": {
+                    "top":    { "$type": "number", "$value": state.gradient.stops.top },
+                    "mid":    { "$type": "number", "$value": state.gradient.stops.mid },
+                    "bottom": { "$type": "number", "$value": state.gradient.stops.bottom }
+                }
+            }
+        };
+
+        return JSON.stringify(tokens, null, 2);
+    }
+
+    function exportVueTokens() {
+        const primaryColors = {};
+        CONFIG.primaryShades.forEach(({shade}) => {
+            primaryColors[shade.toString()] = getTokenColor(`primary-${shade}`);
+        });
+
+        const alternateColors = {};
+        CONFIG.alternateShades.forEach(({shade}) => {
+            alternateColors[shade.toString()] = getTokenColor(`alternate-${shade}`);
+        });
+
+        const tokens = {
+            "colors": {
+                "primary": primaryColors,
+                "alternate": alternateColors
+            }
+        };
+
+        return JSON.stringify(tokens, null, 2);
     }
     
     // Show success modal
