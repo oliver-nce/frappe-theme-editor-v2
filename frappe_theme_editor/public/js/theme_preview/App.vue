@@ -5,12 +5,20 @@
 	<div class="tp-toolbar" :style="{ background: surfPanel, borderBottom: '1px solid ' + alt('200') }">
 		<div class="tp-toolbar-left">
 			<h2 class="tp-title" :style="{ color: alt('900') }">Theme Preview</h2>
-			<span class="tp-subtitle" :style="{ color: alt('500') }">
+			<span v-if="previewSource === 'editor'" class="tp-badge-preview"
+				:style="{ background: pri('100'), color: pri('700') }">
+				Previewing from Editor (unsaved)
+			</span>
+			<span v-else class="tp-subtitle" :style="{ color: alt('500') }">
 				{{ themeMode === 'default' ? 'Frappe Defaults' : 'Custom Theme' }}
 			</span>
 		</div>
 		<div class="tp-toolbar-right">
-			<select v-if="themes.length" v-model="selectedThemeName" class="tp-select"
+			<button v-if="previewSource === 'editor'" class="tp-dismiss-btn" @click="dismissPreview"
+				:style="{ borderColor: alt('300'), color: alt('700') }">
+				Dismiss Preview
+			</button>
+			<select v-if="themes.length && previewSource !== 'editor'" v-model="selectedThemeName" class="tp-select"
 				:style="{ borderColor: alt('300'), color: alt('700'), background: surfPanel }">
 				<option v-for="t in themes" :key="t.name" :value="t.name">{{ t.theme_name }}</option>
 			</select>
@@ -263,7 +271,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 
 const FRAPPE_DEFAULTS = {
 	primary: {
@@ -299,6 +307,7 @@ const themes = ref([]);
 const selectedThemeName = ref('');
 const customTokens = ref(null);
 const loading = ref(true);
+const previewSource = ref('db'); // 'db' | 'editor'
 
 const shades = ['50','100','200','300','400','500','600','700','800','900'];
 
@@ -390,6 +399,51 @@ function toggleMode() {
 	themeMode.value = themeMode.value === 'default' ? 'custom' : 'default';
 }
 
+function loadFromLocalStorage() {
+	try {
+		const raw = localStorage.getItem('nce_theme_preview');
+		if (raw) {
+			customTokens.value = JSON.parse(raw);
+			previewSource.value = 'editor';
+			themeMode.value = 'custom';
+			return true;
+		}
+	} catch (e) {
+		console.error('Failed to parse preview tokens from localStorage:', e);
+	}
+	return false;
+}
+
+function dismissPreview() {
+	localStorage.removeItem('nce_theme_preview');
+	previewSource.value = 'db';
+	if (selectedThemeName.value) {
+		loadThemeTokens(selectedThemeName.value);
+	} else {
+		customTokens.value = null;
+		themeMode.value = 'default';
+	}
+}
+
+function onStorageChange(e) {
+	if (e.key !== 'nce_theme_preview') return;
+	if (e.newValue) {
+		try {
+			customTokens.value = JSON.parse(e.newValue);
+			previewSource.value = 'editor';
+			themeMode.value = 'custom';
+		} catch (_) {}
+	} else {
+		dismissPreview();
+	}
+}
+
+function onFocusCheck() {
+	if (previewSource.value === 'editor') {
+		loadFromLocalStorage();
+	}
+}
+
 async function fetchThemes() {
 	try {
 		const r = await frappe.call({
@@ -428,10 +482,24 @@ async function loadThemeTokens(name) {
 }
 
 watch(selectedThemeName, async (name) => {
-	if (name) await loadThemeTokens(name);
+	if (name && previewSource.value !== 'editor') await loadThemeTokens(name);
 });
 
-onMounted(fetchThemes);
+onMounted(() => {
+	window.addEventListener('storage', onStorageChange);
+	window.addEventListener('focus', onFocusCheck);
+
+	if (!loadFromLocalStorage()) {
+		fetchThemes();
+	} else {
+		fetchThemes();
+	}
+});
+
+onBeforeUnmount(() => {
+	window.removeEventListener('storage', onStorageChange);
+	window.removeEventListener('focus', onFocusCheck);
+});
 </script>
 
 <style>
@@ -444,6 +512,9 @@ onMounted(fetchThemes);
 .tp-select { padding: 6px 12px; border: 1px solid; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; }
 .tp-toggle-btn { padding: 8px 16px; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
 .tp-toggle-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.tp-badge-preview { font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+.tp-dismiss-btn { padding: 6px 14px; border: 1px solid; border-radius: 8px; font-size: 12px; cursor: pointer; background: transparent; transition: all 0.2s; }
+.tp-dismiss-btn:hover { opacity: 0.7; }
 .tp-loading { text-align: center; padding: 48px; font-size: 14px; }
 .tp-content { padding: 24px; display: flex; flex-direction: column; gap: 24px; max-width: 1200px; margin: 0 auto; }
 

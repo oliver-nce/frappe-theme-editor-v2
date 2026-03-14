@@ -149,3 +149,22 @@ def delete_theme(name):
     """Delete a theme."""
     frappe.delete_doc("Theme", name)
     return {"success": True}
+
+
+@frappe.whitelist()
+def apply_to_display_settings(name):
+    """Deploy a saved theme's vue_tokens to NCE_events Display Settings."""
+    theme = frappe.get_doc("Theme", name)
+    if not theme.vue_tokens:
+        frappe.throw("Theme has no Vue tokens to apply")
+    frappe.set_value("Display Settings", "Display Settings", "theme_json", theme.vue_tokens)
+    frappe.db.commit()
+    return {"success": True, "theme_name": theme.theme_name}
+
+
+@frappe.whitelist()
+def clear_display_settings():
+    """Clear live theme — Vue pages fall back to Frappe defaults."""
+    frappe.set_value("Display Settings", "Display Settings", "theme_json", "")
+    frappe.db.commit()
+    return {"success": True}

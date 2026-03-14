@@ -2096,9 +2096,12 @@
             </div>
             <div class="header-buttons">
                 <button class="btn btn-outline" data-action="my-themes">My Themes</button>
+                <button class="btn btn-outline" data-action="preview" id="btnPreview">Preview</button>
                 <button class="btn btn-outline" data-action="revert" id="btnRevert">Revert</button>
                 <button class="btn btn-outline" data-action="update-theme" id="btnUpdate">Update</button>
                 <button class="btn btn-solid" data-action="save-as-new">Save as New Theme</button>
+                <button class="btn btn-outline" data-action="apply-theme" id="btnApply">Apply</button>
+                <button class="btn btn-outline" data-action="clear-live-theme" id="btnClearLive">Clear Live Theme</button>
             </div>
         </div>
         
@@ -2443,6 +2446,15 @@
                 break;
             case 'revert':
                 revertTheme();
+                break;
+            case 'preview':
+                openPreview();
+                break;
+            case 'apply-theme':
+                applyThemeToLive();
+                break;
+            case 'clear-live-theme':
+                clearLiveTheme();
                 break;
             case 'load-theme':
                 loadThemeFromDocType(target.dataset.name);
@@ -3491,20 +3503,116 @@
     function updateThemeButtons() {
         const btnUpdate = document.getElementById('btnUpdate');
         const btnRevert = document.getElementById('btnRevert');
-        if (!btnUpdate || !btnRevert) return; // Guard for early init
-        
-        // Show Update/Revert only if:
-        // 1. A theme is loaded
-        // 2. It's not the default theme
-        // 3. Changes have been made (core state OR Frappe state)
-        const hasChanges = originalState && JSON.stringify(state) !== JSON.stringify(originalState);
-        const isCustomTheme = currentTheme && currentTheme.name !== 'Default';
-        
-        // Always visible for now (TODO: restore conditional logic later)
-        btnUpdate.style.display = 'inline-block';
-        btnRevert.style.display = 'inline-block';
+        const btnApply = document.getElementById('btnApply');
+        const btnClearLive = document.getElementById('btnClearLive');
+        if (!btnUpdate || !btnRevert) return;
+
+        const hasTheme = !!currentTheme;
+        const hasChanges = hasTheme && originalState &&
+            JSON.stringify(state) !== JSON.stringify(originalState);
+
+        // Revert / Update: only when dirty + theme loaded
+        btnRevert.style.display = hasChanges ? 'inline-block' : 'none';
+        btnUpdate.style.display = hasChanges ? 'inline-block' : 'none';
+
+        // Apply: only when clean (no unsaved changes) + theme loaded
+        if (btnApply) {
+            btnApply.style.display = (hasTheme && !hasChanges) ? 'inline-block' : 'none';
+        }
+
+        // Clear Live Theme: always visible
+        if (btnClearLive) {
+            btnClearLive.style.display = 'inline-block';
+        }
     }
-    
+
+    // ── Preview / Apply / Clear Live ─────────────────────────────────────
+
+    let _previewWindow = null;
+
+    function openPreview() {
+        const vueTokens = exportVueTokens();
+        localStorage.setItem('nce_theme_preview', vueTokens);
+
+        const url = '/app/theme-preview';
+        _previewWindow = window.open(url, 'nce-theme-preview');
+
+        if (_previewWindow) {
+            _previewWindow.focus();
+            setTimeout(() => {
+                try { _previewWindow.location.reload(); } catch (_) {}
+            }, 300);
+        }
+    }
+
+    function applyThemeToLive() {
+        if (!currentTheme) {
+            showErrorModal('No saved theme to apply. Save or load a theme first.');
+            return;
+        }
+        const hasChanges = originalState &&
+            JSON.stringify(state) !== JSON.stringify(originalState);
+        if (hasChanges) {
+            showErrorModal('You have unsaved changes. Save or Update your theme before applying.');
+            return;
+        }
+
+        showConfirmModal(
+            'Apply Theme to Live',
+            'This will update the live theme for all users. Continue?',
+            async () => {
+                const frappe = getFrappe();
+                if (!frappe) { showErrorModal('Frappe API not available.'); return; }
+                try {
+                    await frappe.call({
+                        method: 'frappe_theme_editor.frappe_theme_editor.doctype.theme.theme.apply_to_display_settings',
+                        args: { name: currentTheme.name },
+                        async: true
+                    });
+                    showNotification('Theme applied live for all users!');
+                } catch (err) {
+                    showErrorModal('Failed to apply theme: ' + err.message);
+                }
+            }
+        );
+    }
+
+    function clearLiveTheme() {
+        showConfirmModal(
+            'Reset to Frappe Defaults',
+            'This will reset the live theme to Frappe defaults for all users. Continue?',
+            async () => {
+                const frappe = getFrappe();
+                if (!frappe) { showErrorModal('Frappe API not available.'); return; }
+                try {
+                    await frappe.call({
+                        method: 'frappe_theme_editor.frappe_theme_editor.doctype.theme.theme.clear_display_settings',
+                        async: true
+                    });
+                    showNotification('Live theme cleared — Frappe defaults restored.');
+                } catch (err) {
+                    showErrorModal('Failed to clear live theme: ' + err.message);
+                }
+            }
+        );
+    }
+
+    function showConfirmModal(title, message, onConfirm) {
+        document.getElementById('modalContent').innerHTML = `
+            <div class="modal-title">${title}</div>
+            <div class="modal-message">${message}</div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" data-action="close-modal">Cancel</button>
+                <button class="btn btn-primary" id="confirmActionBtn">Confirm</button>
+            </div>
+        `;
+        document.getElementById('modalOverlay').classList.add('show');
+        document.getElementById('confirmActionBtn').addEventListener('click', async () => {
+            closeModal();
+            await onConfirm();
+        });
+    }
+
     // Export current state as JSON string (unified format for DB save)
     function exportThemeJSON() {
         const themeName = currentTheme ? currentTheme.theme_name : 'NCE Theme';
