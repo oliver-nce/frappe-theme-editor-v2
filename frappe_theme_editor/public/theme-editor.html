@@ -5321,15 +5321,15 @@
             const bumpDarkerBtn = el('[data-role="bump-darker"]');
             if (bumpLighterBtn) {
                 bumpLighterBtn.onclick = () => {
-                    if (activePalette === 'brand') bumpAnchor(1);
-                    else if (activePalette === 'alternate') bumpAlternate(1);
+                    if (activePalette === 'brand') bumpAnchor(-1);
+                    else if (activePalette === 'alternate') bumpAlternate(-1);
                     updatePickerBumpIndicator();
                 };
             }
             if (bumpDarkerBtn) {
                 bumpDarkerBtn.onclick = () => {
-                    if (activePalette === 'brand') bumpAnchor(-1);
-                    else if (activePalette === 'alternate') bumpAlternate(-1);
+                    if (activePalette === 'brand') bumpAnchor(1);
+                    else if (activePalette === 'alternate') bumpAlternate(1);
                     updatePickerBumpIndicator();
                 };
             }
