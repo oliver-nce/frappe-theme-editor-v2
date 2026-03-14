@@ -273,20 +273,22 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 
+// Frappe UI native defaults — synced from frappe/frappe-ui colors.json
+// Run: node scripts/sync_frappe_defaults.js to refresh after Frappe version updates
 const FRAPPE_DEFAULTS = {
 	primary: {
-		'50': '#EFF6FF', '100': '#DBEAFE', '200': '#BFDBFE', '300': '#93C5FD',
-		'400': '#60A5FA', '500': '#3B82F6', '600': '#2563EB', '700': '#1D4ED8',
-		'800': '#1E40AF', '900': '#1E3A8A'
+		'50': '#F2F9FF', '100': '#E6F4FF', '200': '#C8E6FF', '300': '#A7D7FD',
+		'400': '#73BBF6', '500': '#0289F7', '600': '#007BE0', '700': '#0070CC',
+		'800': '#005CA3', '900': '#004880'
 	},
 	alternate: {
-		'50': '#F9FAFB', '100': '#F3F4F6', '200': '#E5E7EB', '300': '#D1D5DB',
-		'400': '#9CA3AF', '500': '#6B7280', '600': '#4B5563', '700': '#374151',
-		'800': '#1F2937', '900': '#111827'
+		'50': '#F8F8F8', '100': '#F3F3F3', '200': '#EDEDED', '300': '#E2E2E2',
+		'400': '#C7C7C7', '500': '#999999', '600': '#7C7C7C', '700': '#525252',
+		'800': '#383838', '900': '#171717'
 	},
-	fontFamily: ['Inter', 'sans-serif'],
-	semantic: { success: '#22C55E', warning: '#F59E0B', danger: '#EF4444', info: '#3B82F6' },
-	surface: { page: '#F9FAFB', panel: '#FFFFFF' },
+	fontFamily: ['InterVar', 'Inter', 'sans-serif'],
+	semantic: { success: '#46B37E', warning: '#E79913', danger: '#E03636', info: '#0289F7' },
+	surface: { page: '#F8F8F8', panel: '#FFFFFF' },
 	button: { defaultShade: 500, fontWeight: 600 }
 };
 
