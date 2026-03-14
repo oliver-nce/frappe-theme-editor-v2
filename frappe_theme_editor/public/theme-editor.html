@@ -3534,15 +3534,29 @@
         const vueTokens = exportVueTokens();
         localStorage.setItem('nce_theme_preview', vueTokens);
 
+        // Open from parent window (editor runs in an iframe)
+        const opener = window.parent || window;
         const url = '/app/theme-preview';
-        _previewWindow = window.open(url, 'nce-theme-preview');
+        _previewWindow = opener.open(url, 'nce-theme-preview');
 
         if (_previewWindow) {
             _previewWindow.focus();
+            // Force reload after a short delay so the tab picks up fresh localStorage
             setTimeout(() => {
                 try { _previewWindow.location.reload(); } catch (_) {}
-            }, 300);
+            }, 400);
         }
+
+        // Belt-and-suspenders: dispatch a storage event for tabs that are already listening
+        // (the native 'storage' event only fires in OTHER tabs, not the one that wrote)
+        try {
+            const evt = new StorageEvent('storage', {
+                key: 'nce_theme_preview',
+                newValue: vueTokens,
+                storageArea: localStorage
+            });
+            opener.dispatchEvent(evt);
+        } catch (_) {}
     }
 
     function applyThemeToLive() {
