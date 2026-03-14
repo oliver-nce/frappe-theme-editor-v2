@@ -23,9 +23,7 @@ app_include_css = [
 ]
 
 # Include JS files in header of desk.html
-app_include_js = [
-	"/assets/frappe_theme_editor/js/nce_theme_boot.js",
-]
+# app_include_js = []
 
 # Include CSS in website pages
 # web_include_css = "/assets/frappe_theme_editor/css/nce_theme.css"
@@ -76,17 +74,13 @@ fixtures = [
 	}
 ]
 
-# Boot Info
-# ---------
-extend_bootinfo = "frappe_theme_editor.boot.boot_session"
-
 # After Migrate
 # -------------
 after_migrate = [
 	"frappe_theme_editor.boot.reapply_theme_after_migrate"
 ]
 
-# Website Context (portal CSS — theme injected via boot_session + JS)
+# Website Context
 # -------------------------------------------------------------------
 
 # After Install (sync desktop icons so Theme Editor appears in sidebar)

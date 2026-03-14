@@ -1,0 +1,169 @@
+Category,Sub-Category,Class Pattern,Example,CSS Property,Notes
+Background,Solid Color,bg-{color}-{shade},bg-blue-500,background-color: #3b82f6,Shades: 50 100 200 300 400 500 600 700 800 900 950
+Background,Gradient Direction,bg-gradient-to-{dir},bg-gradient-to-b,background-image: linear-gradient(to bottom ...),Directions: t b l r tr tl br bl
+Background,Gradient From,from-{color}-{shade},from-blue-500,--tw-gradient-from: #3b82f6,Starting color of gradient
+Background,Gradient Via,via-{color}-{shade},via-purple-500,--tw-gradient-via: #a855f7,Middle color of gradient (optional)
+Background,Gradient To,to-{color}-{shade},to-indigo-700,--tw-gradient-to: #4338ca,Ending color of gradient
+Background,Opacity,bg-opacity-{value},bg-opacity-50,--tw-bg-opacity: 0.5,Values: 0 5 10 20 25 30 40 50 60 70 75 80 90 95 100
+Background,Image,bg-none | bg-gradient-to-*,bg-none,background-image: none,Use bg-gradient-to-* for gradients
+Background,Size,bg-auto | bg-cover | bg-contain,bg-cover,background-size: cover,For background images
+Background,Position,bg-center | bg-top | bg-bottom etc,bg-center,background-position: center,Also: bg-left bg-right bg-left-top etc
+Background,Repeat,bg-repeat | bg-no-repeat | bg-repeat-x,bg-no-repeat,background-repeat: no-repeat,Also: bg-repeat-y bg-repeat-round bg-repeat-space
+Text,Color,text-{color}-{shade},text-gray-700,color: #374151,Same color/shade scale as backgrounds
+Text,Size,text-{size},text-sm,font-size: 0.875rem,Sizes: xs sm base lg xl 2xl 3xl 4xl 5xl 6xl 7xl 8xl 9xl
+Text,Weight,font-{weight},font-semibold,font-weight: 600,thin extralight light normal medium semibold bold extrabold black
+Text,Family,font-{family},font-sans,font-family: ...,sans serif mono (customisable in config)
+Text,Alignment,text-{align},text-center,text-align: center,left center right justify start end
+Text,Decoration,underline | line-through | no-underline,underline,text-decoration-line: underline,Also: overline
+Text,Decoration Color,decoration-{color}-{shade},decoration-blue-500,text-decoration-color: #3b82f6,Colour the underline/strikethrough
+Text,Decoration Style,decoration-{style},decoration-wavy,text-decoration-style: wavy,solid double dotted dashed wavy
+Text,Decoration Thickness,decoration-{value},decoration-2,text-decoration-thickness: 2px,auto from-font 0 1 2 4 8
+Text,Underline Offset,underline-offset-{value},underline-offset-4,text-underline-offset: 4px,auto 0 1 2 4 8
+Text,Transform,uppercase | lowercase | capitalize | normal-case,uppercase,text-transform: uppercase,
+Text,Overflow,truncate | text-ellipsis | text-clip,truncate,overflow: hidden + text-overflow: ellipsis,truncate also sets white-space: nowrap
+Text,Wrap,text-wrap | text-nowrap | text-balance | text-pretty,text-nowrap,text-wrap: nowrap,text-pretty for better line breaks
+Text,Indent,indent-{value},indent-8,text-indent: 2rem,Uses spacing scale
+Text,Opacity,text-opacity-{value},text-opacity-75,--tw-text-opacity: 0.75,Values: 0 5 10 20 25 30 40 50 60 70 75 80 90 95 100
+Text,Line Height,leading-{value},leading-tight,line-height: 1.25,none tight snug normal relaxed loose or number 3-10
+Text,Letter Spacing,tracking-{value},tracking-wide,letter-spacing: 0.025em,tighter tight normal wide wider widest
+Text,Whitespace,whitespace-{value},whitespace-nowrap,white-space: nowrap,normal nowrap pre pre-line pre-wrap break-spaces
+Text,Word Break,break-normal | break-words | break-all | break-keep,break-words,overflow-wrap: break-word,
+Font,Style,italic | not-italic,italic,font-style: italic,
+Font,Variant Numeric,ordinal | slashed-zero | tabular-nums etc,tabular-nums,font-variant-numeric: tabular-numeric,lining-nums oldstyle-nums proportional-nums tabular-nums
+Border,Width,border | border-{side} | border-{value},border-2,border-width: 2px,Sides: t r b l x y. Values: 0 2 4 8
+Border,Color,border-{color}-{shade},border-gray-300,border-color: #d1d5db,Same color scale
+Border,Style,border-{style},border-dashed,border-style: dashed,solid dashed dotted double hidden none
+Border,Opacity,border-opacity-{value},border-opacity-50,--tw-border-opacity: 0.5,
+Border,Radius,rounded | rounded-{size},rounded-lg,border-radius: 0.5rem,none sm md lg xl 2xl 3xl full
+Border,Radius Side,rounded-{side}-{size},rounded-t-lg,border-top-left/right-radius: 0.5rem,Sides: t r b l tl tr bl br
+Border,Divide Width,divide-x | divide-y | divide-{value},divide-y-2,border-width between children,Applied via > * + * selector
+Border,Divide Color,divide-{color}-{shade},divide-gray-200,border-color between children,
+Border,Divide Style,divide-{style},divide-dashed,border-style between children,solid dashed dotted double none
+Border,Ring Width,ring | ring-{value},ring-2,box-shadow (ring),0 1 2 4 8 inset
+Border,Ring Color,ring-{color}-{shade},ring-blue-500,--tw-ring-color,
+Border,Ring Offset,ring-offset-{value},ring-offset-2,--tw-ring-offset-width: 2px,0 1 2 4 8
+Border,Ring Offset Color,ring-offset-{color}-{shade},ring-offset-white,--tw-ring-offset-color,
+Border,Outline Width,outline | outline-{value},outline-2,outline-width: 2px,0 1 2 4 8
+Border,Outline Color,outline-{color}-{shade},outline-blue-500,outline-color: #3b82f6,
+Border,Outline Style,outline-{style},outline-dashed,outline-style: dashed,none solid dashed dotted double
+Border,Outline Offset,outline-offset-{value},outline-offset-2,outline-offset: 2px,0 1 2 4 8
+Shadow,Box Shadow,shadow | shadow-{size},shadow-lg,box-shadow: ...,sm md lg xl 2xl inner none
+Shadow,Shadow Color,shadow-{color}-{shade},shadow-blue-500/50,--tw-shadow-color,Use /opacity for transparency
+Spacing,Padding,p-{value} | p{side}-{value},px-4,padding: 1rem,Sides: x y t r b l s e. Scale: 0 0.5 1 1.5 2 2.5 3 3.5 4 5 6 7 8 9 10 11 12 14 16 20 24 28 32 36 40 44 48 52 56 60 64 72 80 96
+Spacing,Margin,m-{value} | m{side}-{value},mt-4,margin-top: 1rem,Same sides and scale as padding. Also: auto
+Spacing,Space Between,space-x-{value} | space-y-{value},space-y-4,margin between children,Applied via > * + * selector. Also: space-x-reverse space-y-reverse
+Sizing,Width,w-{value},w-64,width: 16rem,Scale values + fractions: w-1/2 w-1/3 w-2/3 w-1/4 w-full w-screen w-auto w-min w-max w-fit
+Sizing,Min Width,min-w-{value},min-w-0,min-width: 0,0 full min max fit
+Sizing,Max Width,max-w-{value},max-w-lg,max-width: 32rem,0 none xs sm md lg xl 2xl 3xl 4xl 5xl 6xl 7xl full min max fit prose screen-sm etc
+Sizing,Height,h-{value},h-16,height: 4rem,Same scale as width + h-screen h-full h-auto h-min h-max h-fit
+Sizing,Min Height,min-h-{value},min-h-screen,min-height: 100vh,0 full screen min max fit
+Sizing,Max Height,max-h-{value},max-h-96,max-height: 24rem,Same scale + full screen min max fit
+Sizing,Size (w+h),size-{value},size-8,width + height: 2rem,Sets both width and height simultaneously
+Layout,Display,block | inline-block | flex | grid | hidden etc,flex,display: flex,inline inline-block block flex inline-flex grid inline-grid table hidden contents flow-root list-item
+Layout,Position,static | relative | absolute | fixed | sticky,relative,position: relative,
+Layout,Top/Right/Bottom/Left,{side}-{value},top-4,top: 1rem,inset inset-x inset-y top right bottom left. Values from spacing scale + auto
+Layout,Z-Index,z-{value},z-50,z-index: 50,0 10 20 30 40 50 auto
+Layout,Overflow,overflow-{value},overflow-hidden,overflow: hidden,auto hidden clip visible scroll. Also: overflow-x-* overflow-y-*
+Layout,Visibility,visible | invisible | collapse,invisible,visibility: hidden,
+Layout,Opacity,opacity-{value},opacity-75,opacity: 0.75,0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100
+Flexbox,Direction,flex-row | flex-col | flex-row-reverse | flex-col-reverse,flex-col,flex-direction: column,
+Flexbox,Wrap,flex-wrap | flex-nowrap | flex-wrap-reverse,flex-wrap,flex-wrap: wrap,
+Flexbox,Grow,grow | grow-0,grow,flex-grow: 1,
+Flexbox,Shrink,shrink | shrink-0,shrink-0,flex-shrink: 0,
+Flexbox,Basis,basis-{value},basis-1/2,flex-basis: 50%,Uses spacing scale + fractions + auto full
+Flexbox,Flex,flex-1 | flex-auto | flex-initial | flex-none,flex-1,flex: 1 1 0%,
+Flexbox,Order,order-{value},order-first,order: -9999,1-12 first last none
+Flexbox,Justify Content,justify-{value},justify-between,justify-content: space-between,normal start end center between around evenly stretch
+Flexbox,Align Items,items-{value},items-center,align-items: center,start end center baseline stretch
+Flexbox,Align Self,self-{value},self-end,align-self: flex-end,auto start end center stretch baseline
+Flexbox,Gap,gap-{value} | gap-x-{value} | gap-y-{value},gap-4,gap: 1rem,Uses spacing scale
+Grid,Template Columns,grid-cols-{n},grid-cols-3,grid-template-columns: repeat(3 1fr),1-12 none subgrid
+Grid,Template Rows,grid-rows-{n},grid-rows-3,grid-template-rows: repeat(3 1fr),1-12 none subgrid
+Grid,Column Span,col-span-{n} | col-start-{n} | col-end-{n},col-span-2,grid-column: span 2 / span 2,1-12 full auto
+Grid,Row Span,row-span-{n} | row-start-{n} | row-end-{n},row-span-2,grid-row: span 2 / span 2,1-12 full auto
+Grid,Auto Flow,grid-flow-row | grid-flow-col | grid-flow-dense,grid-flow-col,grid-auto-flow: column,Also: grid-flow-row-dense grid-flow-col-dense
+Grid,Auto Columns,auto-cols-{value},auto-cols-fr,grid-auto-columns: minmax(0 1fr),auto min max fr
+Grid,Auto Rows,auto-rows-{value},auto-rows-fr,grid-auto-rows: minmax(0 1fr),auto min max fr
+Grid,Place Content,place-content-{value},place-content-center,place-content: center,center start end between around evenly baseline stretch
+Grid,Place Items,place-items-{value},place-items-center,place-items: center,start end center baseline stretch
+Grid,Place Self,place-self-{value},place-self-center,place-self: center,auto start end center stretch
+Effects,Mix Blend Mode,mix-blend-{mode},mix-blend-overlay,mix-blend-mode: overlay,normal multiply screen overlay darken lighten color-dodge color-burn hard-light soft-light difference exclusion hue saturation color luminosity plus-lighter
+Effects,Background Blend,bg-blend-{mode},bg-blend-multiply,background-blend-mode: multiply,Same modes as mix-blend
+Filters,Blur,blur | blur-{size},blur-md,filter: blur(12px),none sm md lg xl 2xl 3xl
+Filters,Brightness,brightness-{value},brightness-110,filter: brightness(1.1),0 50 75 90 95 100 105 110 125 150 200
+Filters,Contrast,contrast-{value},contrast-125,filter: contrast(1.25),0 50 75 100 125 150 200
+Filters,Grayscale,grayscale | grayscale-0,grayscale,filter: grayscale(100%),
+Filters,Hue Rotate,hue-rotate-{value},hue-rotate-90,filter: hue-rotate(90deg),0 15 30 60 90 180
+Filters,Invert,invert | invert-0,invert,filter: invert(100%),
+Filters,Saturate,saturate-{value},saturate-150,filter: saturate(1.5),0 50 100 150 200
+Filters,Sepia,sepia | sepia-0,sepia,filter: sepia(100%),
+Filters,Drop Shadow,drop-shadow | drop-shadow-{size},drop-shadow-lg,filter: drop-shadow(...),sm md lg xl 2xl none
+Filters,Backdrop Blur,backdrop-blur-{size},backdrop-blur-md,backdrop-filter: blur(12px),Same sizes as blur
+Filters,Backdrop Brightness,backdrop-brightness-{value},backdrop-brightness-75,backdrop-filter: brightness(0.75),Same values as brightness
+Filters,Backdrop Contrast,backdrop-contrast-{value},backdrop-contrast-125,backdrop-filter: contrast(1.25),Same values as contrast
+Filters,Backdrop Grayscale,backdrop-grayscale,backdrop-grayscale,backdrop-filter: grayscale(100%),
+Filters,Backdrop Saturate,backdrop-saturate-{value},backdrop-saturate-150,backdrop-filter: saturate(1.5),Same values as saturate
+Filters,Backdrop Opacity,backdrop-opacity-{value},backdrop-opacity-50,backdrop-filter: opacity(0.5),
+Transform,Scale,scale-{value},scale-110,transform: scale(1.1),0 50 75 90 95 100 105 110 125 150. Also: scale-x-* scale-y-*
+Transform,Rotate,rotate-{value},rotate-45,transform: rotate(45deg),0 1 2 3 6 12 45 90 180
+Transform,Translate,translate-x-{value} | translate-y-{value},translate-y-4,transform: translateY(1rem),Uses spacing scale + fractions + full
+Transform,Skew,skew-x-{value} | skew-y-{value},skew-x-6,transform: skewX(6deg),0 1 2 3 6 12
+Transform,Origin,origin-{value},origin-top-left,transform-origin: top left,center top top-right right bottom-right bottom bottom-left left top-left
+Transition,Property,transition | transition-{property},transition-colors,transition-property: color ...,none all colors opacity shadow transform
+Transition,Duration,duration-{value},duration-300,transition-duration: 300ms,0 75 100 150 200 300 500 700 1000
+Transition,Timing,ease-{value},ease-in-out,transition-timing-function: ...,linear in out in-out
+Transition,Delay,delay-{value},delay-150,transition-delay: 150ms,0 75 100 150 200 300 500 700 1000
+Animation,Animate,animate-{name},animate-spin,animation: spin 1s linear infinite,none spin ping pulse bounce
+Interactivity,Cursor,cursor-{value},cursor-pointer,cursor: pointer,auto default pointer wait text move help not-allowed none context-menu progress cell crosshair vertical-text alias copy no-drop grab grabbing all-scroll col-resize row-resize n-resize e-resize s-resize w-resize ne-resize nw-resize se-resize sw-resize ew-resize ns-resize nesw-resize nwse-resize zoom-in zoom-out
+Interactivity,User Select,select-{value},select-none,user-select: none,none text all auto
+Interactivity,Pointer Events,pointer-events-none | pointer-events-auto,pointer-events-none,pointer-events: none,
+Interactivity,Resize,resize | resize-none | resize-x | resize-y,resize-none,resize: none,
+Interactivity,Scroll Behavior,scroll-auto | scroll-smooth,scroll-smooth,scroll-behavior: smooth,
+Interactivity,Scroll Margin,scroll-m-{value},scroll-mt-4,scroll-margin-top: 1rem,Uses spacing scale. Sides: x y t r b l
+Interactivity,Scroll Padding,scroll-p-{value},scroll-pt-4,scroll-padding-top: 1rem,Uses spacing scale. Sides: x y t r b l
+Interactivity,Scroll Snap Align,snap-{value},snap-center,scroll-snap-align: center,start end center none
+Interactivity,Scroll Snap Stop,snap-normal | snap-always,snap-always,scroll-snap-stop: always,
+Interactivity,Scroll Snap Type,snap-{value},snap-x,scroll-snap-type: x,none x y both mandatory proximity
+Interactivity,Touch Action,touch-{value},touch-none,touch-action: none,auto none pan-x pan-left pan-right pan-y pan-up pan-down pinch-zoom manipulation
+Interactivity,Will Change,will-change-{value},will-change-transform,will-change: transform,auto scroll contents transform
+Interactivity,Accent Color,accent-{color}-{shade},accent-blue-500,accent-color: #3b82f6,For checkboxes/radio buttons
+Interactivity,Caret Color,caret-{color}-{shade},caret-blue-500,caret-color: #3b82f6,Text input cursor color
+Interactivity,Appearance,appearance-none | appearance-auto,appearance-none,appearance: none,Remove default browser styling
+Tables,Border Collapse,border-collapse | border-separate,border-collapse,border-collapse: collapse,
+Tables,Border Spacing,border-spacing-{value},border-spacing-2,border-spacing: 0.5rem,Uses spacing scale. Also: border-spacing-x-* border-spacing-y-*
+Tables,Table Layout,table-auto | table-fixed,table-fixed,table-layout: fixed,
+Tables,Caption Side,caption-top | caption-bottom,caption-top,caption-side: top,
+SVG,Fill,fill-{color}-{shade} | fill-none | fill-current,fill-current,fill: currentColor,
+SVG,Stroke,stroke-{color}-{shade} | stroke-current,stroke-current,stroke: currentColor,
+SVG,Stroke Width,stroke-{value},stroke-2,stroke-width: 2,0 1 2
+Modifiers,Hover,hover:{class},hover:bg-blue-600,On hover,Prefix any utility class
+Modifiers,Focus,focus:{class},focus:ring-2,On focus,Prefix any utility class
+Modifiers,Active,active:{class},active:bg-blue-800,While pressed,Prefix any utility class
+Modifiers,Disabled,disabled:{class},disabled:opacity-50,When disabled,Prefix any utility class
+Modifiers,First Child,first:{class},first:mt-0,First child element,Prefix any utility class
+Modifiers,Last Child,last:{class},last:mb-0,Last child element,Prefix any utility class
+Modifiers,Odd,odd:{class},odd:bg-gray-50,Odd child elements,Prefix any utility class
+Modifiers,Even,even:{class},even:bg-white,Even child elements,Prefix any utility class
+Modifiers,Group Hover,group-hover:{class},group-hover:text-blue-500,When parent .group is hovered,Parent needs class="group"
+Modifiers,Focus Within,focus-within:{class},focus-within:ring-2,When any child has focus,Prefix any utility class
+Modifiers,Focus Visible,focus-visible:{class},focus-visible:ring-2,Keyboard focus only,Prefix any utility class
+Modifiers,Placeholder,placeholder:{class},placeholder:text-gray-400,Placeholder text,Prefix any utility class
+Modifiers,Dark Mode,dark:{class},dark:bg-gray-900,Dark mode,Prefix any utility class
+Modifiers,Responsive sm,sm:{class},sm:text-lg,>= 640px,Prefix any utility class
+Modifiers,Responsive md,md:{class},md:grid-cols-2,>= 768px,Prefix any utility class
+Modifiers,Responsive lg,lg:{class},lg:grid-cols-3,>= 1024px,Prefix any utility class
+Modifiers,Responsive xl,xl:{class},xl:grid-cols-4,>= 1280px,Prefix any utility class
+Modifiers,Responsive 2xl,2xl:{class},2xl:max-w-screen-xl,>= 1536px,Prefix any utility class
+Modifiers,Print,print:{class},print:hidden,When printing,Prefix any utility class
+Modifiers,Before,before:{class},before:content-['*'],::before pseudo-element,Prefix any utility class
+Modifiers,After,after:{class},after:content-[''],::after pseudo-element,Prefix any utility class
+Modifiers,File Input,file:{class},file:bg-blue-500,::file-selector-button,For file input styling
+Modifiers,Selection,selection:{class},selection:bg-blue-200,::selection,Text selection color
+Modifiers,First Letter,first-letter:{class},first-letter:text-4xl,::first-letter,Prefix any utility class
+Modifiers,First Line,first-line:{class},first-line:font-bold,::first-line,Prefix any utility class
+Modifiers,Marker,marker:{class},marker:text-blue-500,::marker,List bullet/number styling
+Modifiers,Open,open:{class},open:bg-gray-50,<details> when open,Prefix any utility class
+Modifiers,Has,has-[selector]:{class},has-[:checked]:bg-blue-50,When contains matching element,Prefix any utility class
+Modifiers,Peer,peer-hover:{class},peer-hover:text-blue-500,When sibling .peer matches,Sibling needs class="peer"
+Modifiers,Arbitrary Variants,[&:nth-child(3)]:{class},[&:nth-child(3)]:bg-red-500,Custom selector,For any CSS selector
+Arbitrary,Value,[property-arbitrary],w-[137px],width: 137px,Use any CSS value in brackets: bg-[#1a1a2e] text-[22px] grid-cols-[1fr_2fr]

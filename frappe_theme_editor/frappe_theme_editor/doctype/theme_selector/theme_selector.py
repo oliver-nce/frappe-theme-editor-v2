@@ -11,10 +11,7 @@ class ThemeSelector(Document):
 
 @frappe.whitelist()
 def apply_theme(theme_name):
-    """
-    Set the active theme. The boot hook reads this on every page load
-    and injects the theme JSON for client-side setProperty() application.
-    """
+    """Set the active theme."""
     frappe.only_for("System Manager")
 
     if not theme_name:
@@ -31,7 +28,7 @@ def apply_theme(theme_name):
     frappe.clear_cache()
 
     frappe.msgprint(
-        f"Theme '{theme_name}' applied. Reload the page to see changes.",
+        f"Theme '{theme_name}' applied.",
         title="Theme Applied",
         indicator="green"
     )
@@ -47,13 +44,12 @@ def revert_to_default():
     selector = frappe.get_single("Theme Selector")
     selector.active_theme = None
     selector.theme_status = "Default Frappe Theme"
-    selector.css_preview = ""
     selector.save(ignore_permissions=True)
 
     frappe.clear_cache()
 
     frappe.msgprint(
-        "Reverted to default Frappe theme. Reload the page to see changes.",
+        "Reverted to default Frappe theme.",
         title="Theme Reverted",
         indicator="blue"
     )
@@ -63,7 +59,7 @@ def revert_to_default():
 
 @frappe.whitelist()
 def preview_theme(theme_name):
-    """Return the theme's JSON data for client-side preview."""
+    """Return the theme's JSON data for preview."""
     frappe.only_for("System Manager")
 
     if not theme_name:

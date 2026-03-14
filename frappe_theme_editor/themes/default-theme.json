@@ -1,135 +1,38 @@
 {
   "$name": "NCE Default",
-  "$version": "2.0",
-  "$description": "Default NCE theme — brand colors map to Frappe grays, neutrals map to Frappe blues",
+  "$version": "3.0",
+  "$description": "Default NCE theme — Frappe default gray and blue palettes",
 
   "designSystem": {
     "primary": {
-      "hue": 210,
-      "anchor": "#1680E9",
+      "hue": 0,
       "shades": {
-        "50": "#F1F7FE",
-        "100": "#E3F0FC",
-        "200": "#C7E1FA",
-        "300": "#9ECBF5",
-        "400": "#6DB1EE",
-        "500": "#4198F0",
-        "600": "#1680E9",
-        "700": "#126BC4",
-        "800": "#0E569F",
-        "900": "#0A417A"
+        "50": "#F8F8F8",
+        "100": "#F3F3F3",
+        "200": "#EDEDED",
+        "300": "#E2E2E2",
+        "400": "#C7C7C7",
+        "500": "#999999",
+        "600": "#7C7C7C",
+        "700": "#525252",
+        "800": "#383838",
+        "900": "#171717"
       }
     },
-    "neutral": {
+    "alternate": {
       "hue": 210,
-      "saturation": 5,
       "shades": {
-        "50": "#F4F5F6",
-        "100": "#EAEBEE",
-        "200": "#D7DADD",
-        "300": "#B7BBC0",
-        "400": "#8D939A",
-        "500": "#6E757D",
-        "600": "#5A6169",
-        "700": "#4B525A",
-        "800": "#3B4149",
-        "900": "#2E343A"
+        "50": "#F2F9FF",
+        "100": "#E6F4FF",
+        "200": "#C8E6FF",
+        "300": "#A7D7FD",
+        "400": "#73BBF6",
+        "500": "#0289F7",
+        "600": "#007BE0",
+        "700": "#0070CC",
+        "800": "#005CA3",
+        "900": "#004880"
       }
-    }
-  },
-
-  "lightTheme": {
-    "cssVariables": {
-      "--gray-50": "#F1F7FE",
-      "--gray-100": "#E3F0FC",
-      "--gray-200": "#C7E1FA",
-      "--gray-300": "#9ECBF5",
-      "--gray-400": "#6DB1EE",
-      "--gray-500": "#4198F0",
-      "--gray-600": "#1680E9",
-      "--gray-700": "#126BC4",
-      "--gray-800": "#0E569F",
-      "--gray-900": "#0A417A",
-
-      "--primary": "#1680E9",
-      "--primary-color": "#1680E9",
-      "--btn-primary": "#1680E9",
-      "--border-primary": "#1680E9",
-
-      "--bg-color": "#F1F7FE",
-      "--fg-color": "white",
-      "--navbar-bg": "white",
-      "--modal-bg": "white",
-      "--popover-bg": "white",
-
-      "--blue-50": "#F4F5F6",
-      "--blue-100": "#EAEBEE",
-      "--blue-200": "#D7DADD",
-      "--blue-300": "#B7BBC0",
-      "--blue-400": "#8D939A",
-      "--blue-500": "#6E757D",
-      "--blue-600": "#5A6169",
-      "--blue-700": "#4B525A",
-      "--blue-800": "#3B4149",
-      "--blue-900": "#2E343A"
-    }
-  },
-
-  "darkTheme": {
-    "cssVariables": {
-      "--gray-50": "#F1F7FE",
-      "--gray-100": "#E3F0FC",
-      "--gray-200": "#C7E1FA",
-      "--gray-300": "#9ECBF5",
-      "--gray-400": "#6DB1EE",
-      "--gray-500": "#4198F0",
-      "--gray-600": "#1680E9",
-      "--gray-700": "#126BC4",
-      "--gray-800": "#0E569F",
-      "--gray-900": "#0A417A",
-
-      "--primary": "#1680E9",
-      "--primary-color": "#1680E9",
-      "--btn-primary": "#9ECBF5",
-      "--border-primary": "#C7E1FA",
-
-      "--bg-color": "#0A417A",
-      "--fg-color": "#0A417A",
-      "--navbar-bg": "#0A417A",
-      "--modal-bg": "#0A417A",
-      "--popover-bg": "#0A417A",
-
-      "--blue-50": "#F4F5F6",
-      "--blue-100": "#EAEBEE",
-      "--blue-200": "#D7DADD",
-      "--blue-300": "#B7BBC0",
-      "--blue-400": "#8D939A",
-      "--blue-500": "#6E757D",
-      "--blue-600": "#5A6169",
-      "--blue-700": "#4B525A",
-      "--blue-800": "#3B4149",
-      "--blue-900": "#2E343A",
-
-      "--heading-color": "#F1F7FE",
-      "--text-color": "#F1F7FE",
-      "--text-muted": "#6DB1EE",
-      "--text-light": "#9ECBF5",
-      "--disabled-text-color": "#6DB1EE",
-
-      "--control-bg": "#0E569F",
-      "--btn-default-bg": "#0E569F",
-      "--subtle-fg": "#0E569F",
-      "--sidebar-select-color": "#0E569F",
-      "--border-color": "#0E569F",
-      "--table-border-color": "#0E569F",
-      "--dark-border-color": "#1680E9",
-      "--btn-default-hover-bg": "#126BC4",
-      "--highlight-color": "#126BC4",
-      "--subtle-accent": "#126BC4",
-      "--disabled-control-bg": "#0E569F",
-      "--icon-stroke": "#9ECBF5",
-      "--scrollbar-thumb-color": "#6DB1EE",
-      "--scrollbar-track-color": "#0E569F"
     }
   }
 }

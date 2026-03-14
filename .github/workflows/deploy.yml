@@ -1,0 +1,39 @@
+name: Deploy NCE Design System
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch: # Allows manual triggering from GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Deploy via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ncesoccer.sftp.wpengine.com
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: 2222
+          protocol: sftp
+          local-dir: ./NCE-Design-System/
+          server-dir: /wp-content/wp-custom-scripts/NCE-Design-System/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.DS_Store
+            .github/**
+          dangerous-clean-slate: false
+          
+      - name: Deployment Complete
+        run: |
+          echo "✅ NCE Design System deployed to ncesoccer.com"
+          echo "📦 Files synced to wp-content/wp-custom-scripts/NCE-Design-System/"

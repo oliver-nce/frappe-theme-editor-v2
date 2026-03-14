@@ -16,12 +16,14 @@ class Theme(Document):
         except json.JSONDecodeError:
             frappe.throw("Invalid JSON in json_data")
 
-        version = data.get("$version", "")
-        if version.startswith("2."):
-            if "lightTheme" not in data or "cssVariables" not in data.get("lightTheme", {}):
-                frappe.throw("V2 theme must have lightTheme.cssVariables")
-            if "darkTheme" not in data or "cssVariables" not in data.get("darkTheme", {}):
-                frappe.throw("V2 theme must have darkTheme.cssVariables")
+        ds = data.get("designSystem", {})
+        primary = ds.get("primary", {})
+        alternate = ds.get("alternate", {})
+
+        if not primary.get("shades"):
+            frappe.throw("Theme must have designSystem.primary.shades")
+        if not alternate.get("shades"):
+            frappe.throw("Theme must have designSystem.alternate.shades")
 
         if self.is_default:
             frappe.db.sql(
@@ -45,13 +47,14 @@ def get_all_themes():
             data = json.loads(theme_doc.json_data)
             ds = data.get("designSystem", {})
             primary = ds.get("primary", {})
-            neutral = ds.get("neutral", {})
-            theme["primary_color"] = primary.get("anchor", "#4299F0")
-            shades = neutral.get("shades", {})
-            theme["neutral_color"] = shades.get("600", "#666666")
+            alternate = ds.get("alternate", {})
+            primary_shades = primary.get("shades", {})
+            alternate_shades = alternate.get("shades", {})
+            theme["primary_color"] = primary_shades.get("600", "#7C7C7C")
+            theme["alternate_color"] = alternate_shades.get("600", "#007BE0")
         except Exception:
-            theme["primary_color"] = "#4299F0"
-            theme["neutral_color"] = "#666666"
+            theme["primary_color"] = "#7C7C7C"
+            theme["alternate_color"] = "#007BE0"
 
     return themes
 

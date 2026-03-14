@@ -78,41 +78,12 @@
 
         .btn-primary:hover { background: #1d4ed8; }
 
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 0;
-            background: var(--editor-fg);
-            border-bottom: 1px solid var(--editor-border);
-            padding: 0 24px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            color: var(--editor-muted);
-            transition: all 0.15s;
-        }
-
-        .tab:hover { color: var(--editor-text); }
-
-        .tab.active {
-            color: var(--editor-accent);
-            border-bottom-color: var(--editor-accent);
-        }
-
         /* Content */
         .content {
             padding: 24px;
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
 
         /* Cards */
         .card {
@@ -218,51 +189,7 @@
             box-shadow: 0 0 0 2px white, 0 0 0 4px var(--editor-accent);
         }
 
-        /* CSS Variable Table */
-        .var-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .var-table th {
-            text-align: left;
-            padding: 8px 12px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--editor-muted);
-            border-bottom: 2px solid var(--editor-border);
-            background: var(--editor-bg);
-        }
-
-        .var-table td {
-            padding: 8px 12px;
-            font-size: 13px;
-            border-bottom: 1px solid var(--editor-border);
-            vertical-align: middle;
-        }
-
-        .var-table tr:hover td {
-            background: var(--editor-accent-light);
-        }
-
-        .var-table .var-name {
-            font-family: "SF Mono", Monaco, monospace;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .var-table .var-source {
-            font-size: 11px;
-            color: var(--editor-muted);
-        }
-
-        .var-table .var-desc {
-            font-size: 12px;
-            color: var(--editor-muted);
-        }
-
+        /* Anchor preview chip */
         .color-chip {
             display: inline-flex;
             align-items: center;
@@ -282,50 +209,6 @@
             font-size: 12px;
         }
 
-        /* Category header rows */
-        .var-table .category-row td {
-            background: var(--editor-bg);
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--editor-accent);
-            padding: 12px;
-            border-bottom: 1px solid var(--editor-border);
-        }
-
-        /* Derived variable styling */
-        .var-table .derived td {
-            opacity: 0.7;
-        }
-
-        .var-table .derived .var-name {
-            font-style: italic;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 1px 6px;
-            border-radius: 3px;
-            font-size: 10px;
-            font-weight: 500;
-        }
-
-        .badge-auto {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .badge-set {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .badge-derived {
-            background: #f3f4f6;
-            color: #6b7280;
-        }
-
         /* Sections */
         .section-gap { margin-top: 24px; }
     </style>
@@ -334,7 +217,7 @@
 
 <div class="header">
     <div class="header-left">
-        <h1>Frappe Theme Editor <span>v2.0</span></h1>
+        <h1>Frappe Theme Editor <span>v3.0</span></h1>
     </div>
     <div class="header-buttons">
         <button class="btn" onclick="loadThemes()">My Themes</button>
@@ -343,73 +226,44 @@
     </div>
 </div>
 
-<div class="tabs">
-    <div class="tab active" data-tab="design">Design System</div>
-    <div class="tab" data-tab="light">Light Theme</div>
-    <div class="tab" data-tab="dark">Dark Theme</div>
-</div>
-
 <div class="content">
 
-    <!-- TAB 1: Design System -->
-    <div class="tab-content active" id="tab-design">
-
-        <div class="card">
-            <h2>Primary Color (Brand)</h2>
-            <div class="control-row">
-                <label>Hue</label>
-                <input type="range" id="primaryHue" min="0" max="360" value="210">
-                <span class="control-value" id="primaryHueVal">210</span>
-            </div>
-            <div class="control-row">
-                <label>Anchor</label>
-                <div class="color-chip">
-                    <div class="swatch" id="primaryAnchorSwatch"></div>
-                    <span class="hex" id="primaryAnchorHex"></span>
-                </div>
-            </div>
-            <h3>Shade Scale</h3>
-            <div class="shade-scale" id="primaryScale"></div>
+    <!-- Primary Color Palette -->
+    <div class="card">
+        <h2>Primary Color</h2>
+        <div class="control-row">
+            <label>Hue</label>
+            <input type="range" id="primaryHue" min="0" max="360" value="210">
+            <span class="control-value" id="primaryHueVal">210</span>
         </div>
-
-        <div class="card">
-            <h2>Neutral Color</h2>
-            <div class="control-row">
-                <label>Hue</label>
-                <input type="range" id="neutralHue" min="-1" max="360" value="210">
-                <span class="control-value" id="neutralHueVal">210</span>
+        <div class="control-row">
+            <label>Anchor</label>
+            <div class="color-chip">
+                <div class="swatch" id="primaryAnchorSwatch"></div>
+                <span class="hex" id="primaryAnchorHex"></span>
             </div>
-            <div class="control-row">
-                <label>Saturation</label>
-                <input type="range" id="neutralSat" min="0" max="20" value="5">
-                <span class="control-value" id="neutralSatVal">5%</span>
-            </div>
-            <h3>Shade Scale</h3>
-            <div class="shade-scale" id="neutralScale"></div>
         </div>
-
+        <h3>Shade Scale</h3>
+        <div class="shade-scale" id="primaryScale"></div>
     </div>
 
-    <!-- TAB 2: Light Theme -->
-    <div class="tab-content" id="tab-light">
-        <div class="card">
-            <h2>Light Mode — Frappe CSS Variables</h2>
-            <p style="font-size:13px; color:var(--editor-muted); margin-bottom:16px;">
-                Auto-mapped from your Design System. These are the values that get applied to Frappe Desk via <code>setProperty()</code>.
-            </p>
-            <table class="var-table" id="lightVarTable"></table>
+    <!-- Alternate Color Palette -->
+    <div class="card">
+        <h2>Alternate Color</h2>
+        <div class="control-row">
+            <label>Hue</label>
+            <input type="range" id="alternateHue" min="0" max="360" value="210">
+            <span class="control-value" id="alternateHueVal">210</span>
         </div>
-    </div>
-
-    <!-- TAB 3: Dark Theme -->
-    <div class="tab-content" id="tab-dark">
-        <div class="card">
-            <h2>Dark Mode — Frappe CSS Variables</h2>
-            <p style="font-size:13px; color:var(--editor-muted); margin-bottom:16px;">
-                Auto-generated dark mode mapping. Backgrounds flip dark, text flips light, using your design tokens.
-            </p>
-            <table class="var-table" id="darkVarTable"></table>
+        <div class="control-row">
+            <label>Anchor</label>
+            <div class="color-chip">
+                <div class="swatch" id="alternateAnchorSwatch"></div>
+                <span class="hex" id="alternateAnchorHex"></span>
+            </div>
         </div>
+        <h3>Shade Scale</h3>
+        <div class="shade-scale" id="alternateScale"></div>
     </div>
 
 </div>
@@ -420,46 +274,31 @@
 
     // =========================================================================
     // CONFIG — HSL recipes for generating shade scales
+    // Both palettes use the same recipe for consistent shade distribution
     // =========================================================================
-    var CONFIG = {
-        primaryShades: [
-            { shade: 50,  s: 100, l: 97 },
-            { shade: 100, s: 98,  l: 94 },
-            { shade: 200, s: 95,  l: 88 },
-            { shade: 300, s: 92,  l: 80 },
-            { shade: 400, s: 88,  l: 70 },
-            { shade: 500, s: 83,  l: 60 },
-            { shade: 600, s: 78,  l: 50 },
-            { shade: 700, s: 73,  l: 42 },
-            { shade: 800, s: 68,  l: 37 },
-            { shade: 900, s: 65,  l: 35 }
-        ],
-        neutralShades: [
-            { shade: 50,  s: 5,  l: 98 },
-            { shade: 100, s: 5,  l: 96 },
-            { shade: 200, s: 5,  l: 92 },
-            { shade: 300, s: 5,  l: 85 },
-            { shade: 400, s: 5,  l: 73 },
-            { shade: 500, s: 6,  l: 58 },
-            { shade: 600, s: 7,  l: 46 },
-            { shade: 700, s: 7,  l: 38 },
-            { shade: 800, s: 8,  l: 32 },
-            { shade: 900, s: 8,  l: 30 }
-        ]
-    };
+    var SHADE_CONFIG = [
+        { shade: 50,  s: 100, l: 97 },
+        { shade: 100, s: 98,  l: 94 },
+        { shade: 200, s: 95,  l: 88 },
+        { shade: 300, s: 92,  l: 80 },
+        { shade: 400, s: 88,  l: 70 },
+        { shade: 500, s: 83,  l: 60 },
+        { shade: 600, s: 78,  l: 50 },
+        { shade: 700, s: 73,  l: 42 },
+        { shade: 800, s: 68,  l: 37 },
+        { shade: 900, s: 65,  l: 35 }
+    ];
 
     // =========================================================================
     // STATE
     // =========================================================================
     var state = {
         primaryHue: 210,
-        neutralHue: 210,
-        neutralSatMult: 1
+        alternateHue: 210
     };
 
-    // Computed shade caches
     var primaryColors = {};
-    var neutralColors = {};
+    var alternateColors = {};
 
     // =========================================================================
     // COLOR MATH
@@ -478,170 +317,16 @@
     // =========================================================================
     // SHADE GENERATION
     // =========================================================================
-    function generatePrimaryShades() {
-        primaryColors = {};
-        CONFIG.primaryShades.forEach(function(cfg) {
-            primaryColors[cfg.shade] = hslToHex(state.primaryHue, cfg.s, cfg.l);
+    function generateShades(hue) {
+        var colors = {};
+        SHADE_CONFIG.forEach(function(cfg) {
+            colors[cfg.shade] = hslToHex(hue, cfg.s, cfg.l);
         });
-    }
-
-    function generateNeutralShades() {
-        neutralColors = {};
-        var hue = state.neutralHue === -1 ? 0 : state.neutralHue;
-        CONFIG.neutralShades.forEach(function(cfg) {
-            var sat = state.neutralHue === -1 ? 0 : Math.round(cfg.s * state.neutralSatMult);
-            neutralColors[cfg.shade] = hslToHex(hue, sat, cfg.l);
-        });
+        return colors;
     }
 
     // =========================================================================
-    // FRAPPE VARIABLE MAPPING
-    // =========================================================================
-
-    // Mapping: primary shades → --gray-*, neutral shades → --blue-*
-    // (user's brand colors are the Frappe grays, user's neutrals are the Frappe blues)
-    var LIGHT_VARIABLE_MAP = [
-        { category: "Gray Scale (from Primary)" },
-        { var: "--gray-50",  source: "primary.50",  desc: "Highlights, disabled bg, row hover" },
-        { var: "--gray-100", source: "primary.100", desc: "Input backgrounds, default button bg, sidebar selected" },
-        { var: "--gray-200", source: "primary.200", desc: "Borders, table borders, scrollbar track" },
-        { var: "--gray-300", source: "primary.300", desc: "Strong borders, button hover bg, switch bg" },
-        { var: "--gray-400", source: "primary.400", desc: "Scrollbar thumb, dark gray backgrounds" },
-        { var: "--gray-500", source: "primary.500", desc: "Placeholder text, muted icons" },
-        { var: "--gray-600", source: "primary.600", desc: "Light text, disabled text" },
-        { var: "--gray-700", source: "primary.700", desc: "Body text (--text-muted)" },
-        { var: "--gray-800", source: "primary.800", desc: "Emphasized text, icon stroke" },
-        { var: "--gray-900", source: "primary.900", desc: "Headings" },
-
-        { category: "Blue Scale (from Neutral)" },
-        { var: "--blue-50",  source: "neutral.50",  desc: "Info alert backgrounds" },
-        { var: "--blue-100", source: "neutral.100", desc: "Info alert lighter backgrounds" },
-        { var: "--blue-200", source: "neutral.200", desc: "Focus ring color" },
-        { var: "--blue-300", source: "neutral.300", desc: "Blue indicator pills" },
-        { var: "--blue-400", source: "neutral.400", desc: "Blue indicator pills" },
-        { var: "--blue-500", source: "neutral.500", desc: "Blue indicators, links" },
-        { var: "--blue-600", source: "neutral.600", desc: "Blue active states" },
-        { var: "--blue-700", source: "neutral.700", desc: "Blue dark states" },
-        { var: "--blue-800", source: "neutral.800", desc: "Blue scale dark" },
-        { var: "--blue-900", source: "neutral.900", desc: "Blue scale darkest" },
-
-        { category: "Primary Overrides" },
-        { var: "--primary",        source: "primary.600", desc: "Checkbox bg, progress bars, Bootstrap primary" },
-        { var: "--primary-color",  source: "primary.600", desc: "Primary color for UI contexts" },
-        { var: "--btn-primary",    source: "primary.600", desc: "Primary button background (Save, Add New)" },
-        { var: "--border-primary", source: "primary.600", desc: "Border on focused/primary elements" },
-
-        { category: "Backgrounds" },
-        { var: "--bg-color",   source: "primary.50", desc: "Page background behind cards" },
-        { var: "--fg-color",   source: "white",      desc: "Card, modal, popover backgrounds" },
-        { var: "--navbar-bg",  source: "white",      desc: "Top navigation bar" },
-        { var: "--modal-bg",   source: "white",      desc: "Modal dialog background" },
-        { var: "--popover-bg", source: "white",      desc: "Popover/dropdown background" },
-
-        { category: "Derived (auto-cascade from grays — read only)" },
-        { var: "--control-bg",          source: "= --gray-100",  desc: "Input field backgrounds", derived: true },
-        { var: "--btn-default-bg",      source: "= --gray-100",  desc: "Default button backgrounds", derived: true },
-        { var: "--border-color",        source: "= --gray-200",  desc: "All standard borders", derived: true },
-        { var: "--dark-border-color",   source: "= --gray-300",  desc: "Emphasized borders", derived: true },
-        { var: "--text-light",          source: "= --gray-600",  desc: "Light/secondary text", derived: true },
-        { var: "--text-muted",          source: "= --gray-700",  desc: "Most body text on Desk", derived: true },
-        { var: "--text-color",          source: "= --gray-800",  desc: "Emphasized text", derived: true },
-        { var: "--heading-color",       source: "= --gray-900",  desc: "Page and section headings", derived: true },
-        { var: "--highlight-color",     source: "= --gray-50",   desc: "Row hover in lists", derived: true },
-        { var: "--icon-stroke",         source: "= --gray-800",  desc: "Icon stroke colors", derived: true }
-    ];
-
-    // Dark mode: same base scales, but backgrounds/text/derived flip
-    var DARK_VARIABLE_MAP = [
-        { category: "Gray Scale (same as light)" },
-        { var: "--gray-50",  source: "primary.50",  desc: "Highlights, disabled bg, row hover" },
-        { var: "--gray-100", source: "primary.100", desc: "Input backgrounds, default button bg" },
-        { var: "--gray-200", source: "primary.200", desc: "Borders, table borders" },
-        { var: "--gray-300", source: "primary.300", desc: "Strong borders, button hover bg" },
-        { var: "--gray-400", source: "primary.400", desc: "Scrollbar thumb" },
-        { var: "--gray-500", source: "primary.500", desc: "Placeholder text, muted icons" },
-        { var: "--gray-600", source: "primary.600", desc: "Light text, disabled text" },
-        { var: "--gray-700", source: "primary.700", desc: "Body text" },
-        { var: "--gray-800", source: "primary.800", desc: "Emphasized text, icon stroke" },
-        { var: "--gray-900", source: "primary.900", desc: "Headings" },
-
-        { category: "Blue Scale (same as light)" },
-        { var: "--blue-50",  source: "neutral.50",  desc: "Info alert backgrounds" },
-        { var: "--blue-100", source: "neutral.100", desc: "Info alert lighter" },
-        { var: "--blue-200", source: "neutral.200", desc: "Focus ring" },
-        { var: "--blue-300", source: "neutral.300", desc: "Blue pills" },
-        { var: "--blue-400", source: "neutral.400", desc: "Blue pills" },
-        { var: "--blue-500", source: "neutral.500", desc: "Blue indicators, links" },
-        { var: "--blue-600", source: "neutral.600", desc: "Blue active" },
-        { var: "--blue-700", source: "neutral.700", desc: "Blue dark" },
-        { var: "--blue-800", source: "neutral.800", desc: "Blue scale dark" },
-        { var: "--blue-900", source: "neutral.900", desc: "Blue scale darkest" },
-
-        { category: "Primary Overrides (flipped for dark)" },
-        { var: "--primary",        source: "primary.600", desc: "Checkbox bg, progress bars" },
-        { var: "--primary-color",  source: "primary.600", desc: "Primary color" },
-        { var: "--btn-primary",    source: "primary.300", desc: "Primary button — light on dark bg" },
-        { var: "--border-primary", source: "primary.200", desc: "Border on primary elements — light on dark" },
-
-        { category: "Backgrounds (flipped dark)" },
-        { var: "--bg-color",   source: "primary.900", desc: "Page background — darkest shade" },
-        { var: "--fg-color",   source: "primary.900", desc: "Card backgrounds — darkest shade" },
-        { var: "--navbar-bg",  source: "primary.900", desc: "Navbar — darkest shade" },
-        { var: "--modal-bg",   source: "primary.900", desc: "Modals — darkest shade" },
-        { var: "--popover-bg", source: "primary.900", desc: "Popovers — darkest shade" },
-
-        { category: "Text (flipped light on dark)" },
-        { var: "--heading-color",      source: "primary.50",  desc: "Headings — lightest shade" },
-        { var: "--text-color",         source: "primary.50",  desc: "Emphasized text — lightest" },
-        { var: "--text-muted",         source: "primary.400", desc: "Body text — mid-light" },
-        { var: "--text-light",         source: "primary.300", desc: "Secondary text — lighter" },
-        { var: "--disabled-text-color", source: "primary.400", desc: "Disabled text" },
-
-        { category: "Derived (explicitly set for dark mode)" },
-        { var: "--control-bg",           source: "primary.800", desc: "Input fields — dark" },
-        { var: "--btn-default-bg",       source: "primary.800", desc: "Default buttons — dark" },
-        { var: "--subtle-fg",            source: "primary.800", desc: "Subtle backgrounds — dark" },
-        { var: "--sidebar-select-color", source: "primary.800", desc: "Sidebar selected — dark" },
-        { var: "--border-color",         source: "primary.800", desc: "Borders — subtle dark" },
-        { var: "--table-border-color",   source: "primary.800", desc: "Table borders — subtle dark" },
-        { var: "--dark-border-color",    source: "primary.600", desc: "Strong borders — medium" },
-        { var: "--btn-default-hover-bg", source: "primary.700", desc: "Button hover — dark" },
-        { var: "--highlight-color",      source: "primary.700", desc: "Row hover — dark" },
-        { var: "--subtle-accent",        source: "primary.700", desc: "Subtle accents — dark" },
-        { var: "--disabled-control-bg",  source: "primary.800", desc: "Disabled inputs — dark" },
-        { var: "--icon-stroke",          source: "primary.300", desc: "Icons — light on dark" },
-        { var: "--scrollbar-thumb-color", source: "primary.400", desc: "Scrollbar thumb" },
-        { var: "--scrollbar-track-color", source: "primary.800", desc: "Scrollbar track — dark" }
-    ];
-
-    // =========================================================================
-    // RESOLVE SOURCE TO HEX
-    // =========================================================================
-    function resolveSource(source) {
-        if (source === "white") return "#ffffff";
-
-        var parts = source.replace("= ", "").split(".");
-        var scale = parts[0];
-        var shade = parseInt(parts[1]);
-
-        if (scale === "primary" || scale === "--gray") {
-            return primaryColors[shade] || "#000000";
-        }
-        if (scale === "neutral" || scale === "--blue") {
-            return neutralColors[shade] || "#000000";
-        }
-
-        // Handle derived refs like "= --gray-100"
-        if (source.startsWith("= --gray-")) {
-            var grayShade = parseInt(source.replace("= --gray-", ""));
-            return primaryColors[grayShade] || "#000000";
-        }
-
-        return "#000000";
-    }
-
-    // =========================================================================
-    // RENDER SHADE SCALES (Tab 1)
+    // RENDER SHADE SCALE
     // =========================================================================
     function renderShadeScale(containerId, colors, anchorShade) {
         var container = document.getElementById(containerId);
@@ -660,62 +345,22 @@
     }
 
     // =========================================================================
-    // RENDER CSS VARIABLE TABLE (Tab 2 / Tab 3)
-    // =========================================================================
-    function renderVarTable(tableId, varMap) {
-        var table = document.getElementById(tableId);
-        var html = '<thead><tr>';
-        html += '<th>CSS Variable</th>';
-        html += '<th>Value</th>';
-        html += '<th>Source</th>';
-        html += '<th>Controls</th>';
-        html += '</tr></thead><tbody>';
-
-        varMap.forEach(function(row) {
-            if (row.category) {
-                html += '<tr class="category-row"><td colspan="4">' + row.category + '</td></tr>';
-                return;
-            }
-
-            var hex = resolveSource(row.source);
-            var isDerived = row.derived || false;
-            var trClass = isDerived ? ' class="derived"' : '';
-            var badge = isDerived ? '<span class="badge badge-derived">auto</span>' : '<span class="badge badge-set">set</span>';
-
-            html += '<tr' + trClass + '>';
-            html += '<td><span class="var-name">' + row.var + '</span></td>';
-            html += '<td><div class="color-chip">';
-            html += '<div class="swatch" style="background:' + hex + '"></div>';
-            html += '<span class="hex">' + hex.toUpperCase() + '</span>';
-            html += '</div></td>';
-            html += '<td><span class="var-source">' + row.source + '</span> ' + badge + '</td>';
-            html += '<td><span class="var-desc">' + row.desc + '</span></td>';
-            html += '</tr>';
-        });
-
-        html += '</tbody>';
-        table.innerHTML = html;
-    }
-
-    // =========================================================================
     // UPDATE ALL
     // =========================================================================
     function updateAll() {
-        generatePrimaryShades();
-        generateNeutralShades();
+        primaryColors = generateShades(state.primaryHue);
+        alternateColors = generateShades(state.alternateHue);
 
-        // Tab 1 scales
         renderShadeScale("primaryScale", primaryColors, 600);
-        renderShadeScale("neutralScale", neutralColors, null);
+        renderShadeScale("alternateScale", alternateColors, 600);
 
-        // Tab 1 anchor preview
-        var anchorHex = primaryColors[600] || "#000";
-        document.getElementById("primaryAnchorSwatch").style.background = anchorHex;
-        document.getElementById("primaryAnchorHex").textContent = anchorHex.toUpperCase();
+        var primaryAnchor = primaryColors[600] || "#000";
+        document.getElementById("primaryAnchorSwatch").style.background = primaryAnchor;
+        document.getElementById("primaryAnchorHex").textContent = primaryAnchor.toUpperCase();
 
-        // Tab 2 and Tab 3 tables
-        renderVarTable("lightVarTable", LIGHT_VARIABLE_MAP);
-        renderVarTable("darkVarTable", DARK_VARIABLE_MAP);
+        var alternateAnchor = alternateColors[600] || "#000";
+        document.getElementById("alternateAnchorSwatch").style.background = alternateAnchor;
+        document.getElementById("alternateAnchorHex").textContent = alternateAnchor.toUpperCase();
     }
 
     // =========================================================================
@@ -727,26 +372,10 @@
         updateAll();
     });
 
-    document.getElementById("neutralHue").addEventListener("input", function() {
-        state.neutralHue = parseInt(this.value);
-        document.getElementById("neutralHueVal").textContent = this.value === "-1" ? "gray" : this.value;
+    document.getElementById("alternateHue").addEventListener("input", function() {
+        state.alternateHue = parseInt(this.value);
+        document.getElementById("alternateHueVal").textContent = this.value;
         updateAll();
-    });
-
-    document.getElementById("neutralSat").addEventListener("input", function() {
-        state.neutralSatMult = parseInt(this.value) / 5;
-        document.getElementById("neutralSatVal").textContent = this.value + "%";
-        updateAll();
-    });
-
-    // Tab switching
-    document.querySelectorAll(".tab").forEach(function(tab) {
-        tab.addEventListener("click", function() {
-            document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); });
-            document.querySelectorAll(".tab-content").forEach(function(tc) { tc.classList.remove("active"); });
-            tab.classList.add("active");
-            document.getElementById("tab-" + tab.getAttribute("data-tab")).classList.add("active");
-        });
     });
 
     // =========================================================================
@@ -757,39 +386,23 @@
     }
 
     function buildThemeJSON() {
-        generatePrimaryShades();
-        generateNeutralShades();
-
-        var lightVars = {};
-        LIGHT_VARIABLE_MAP.forEach(function(row) {
-            if (row.category) return;
-            lightVars[row.var] = resolveSource(row.source);
-        });
-
-        var darkVars = {};
-        DARK_VARIABLE_MAP.forEach(function(row) {
-            if (row.category) return;
-            darkVars[row.var] = resolveSource(row.source);
-        });
+        primaryColors = generateShades(state.primaryHue);
+        alternateColors = generateShades(state.alternateHue);
 
         return {
             "$name": "Custom Theme",
-            "$version": "2.0",
-            "$description": "Generated by Theme Editor V2",
+            "$version": "3.0",
+            "$description": "Generated by Theme Editor V3",
             "designSystem": {
                 "primary": {
                     "hue": state.primaryHue,
-                    "anchor": primaryColors[600],
                     "shades": Object.assign({}, primaryColors)
                 },
-                "neutral": {
-                    "hue": state.neutralHue,
-                    "saturation": Math.round(state.neutralSatMult * 5),
-                    "shades": Object.assign({}, neutralColors)
+                "alternate": {
+                    "hue": state.alternateHue,
+                    "shades": Object.assign({}, alternateColors)
                 }
-            },
-            "lightTheme": { "cssVariables": lightVars },
-            "darkTheme": { "cssVariables": darkVars }
+            }
         };
     }
 
@@ -806,7 +419,7 @@
             method: "frappe_theme_editor.frappe_theme_editor.doctype.theme.theme.save_theme",
             args: {
                 theme_name: name,
-                description: "Created by Theme Editor V2",
+                description: "Created by Theme Editor V3",
                 json_data: JSON.stringify(theme)
             },
             callback: function(r) {
@@ -855,15 +468,10 @@
                             document.getElementById("primaryHue").value = state.primaryHue;
                             document.getElementById("primaryHueVal").textContent = state.primaryHue;
                         }
-                        if (ds.neutral && ds.neutral.hue !== undefined) {
-                            state.neutralHue = ds.neutral.hue;
-                            document.getElementById("neutralHue").value = state.neutralHue;
-                            document.getElementById("neutralHueVal").textContent = state.neutralHue === -1 ? "gray" : state.neutralHue;
-                        }
-                        if (ds.neutral && ds.neutral.saturation !== undefined) {
-                            state.neutralSatMult = ds.neutral.saturation / 5;
-                            document.getElementById("neutralSat").value = ds.neutral.saturation;
-                            document.getElementById("neutralSatVal").textContent = ds.neutral.saturation + "%";
+                        if (ds.alternate && ds.alternate.hue !== undefined) {
+                            state.alternateHue = ds.alternate.hue;
+                            document.getElementById("alternateHue").value = state.alternateHue;
+                            document.getElementById("alternateHueVal").textContent = state.alternateHue;
                         }
                     }
                     updateAll();
@@ -877,14 +485,11 @@
 
     window.resetToDefaults = function() {
         state.primaryHue = 210;
-        state.neutralHue = 210;
-        state.neutralSatMult = 1;
+        state.alternateHue = 210;
         document.getElementById("primaryHue").value = 210;
         document.getElementById("primaryHueVal").textContent = "210";
-        document.getElementById("neutralHue").value = 210;
-        document.getElementById("neutralHueVal").textContent = "210";
-        document.getElementById("neutralSat").value = 5;
-        document.getElementById("neutralSatVal").textContent = "5%";
+        document.getElementById("alternateHue").value = 210;
+        document.getElementById("alternateHueVal").textContent = "210";
         updateAll();
     };
 
