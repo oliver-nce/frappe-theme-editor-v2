@@ -35,7 +35,7 @@
 
 	<div v-if="loading" class="tp-loading" :style="{ color: ink(5) }">Loading themes…</div>
 
-	<div v-else class="tp-content">
+	<div v-else class="tp-content" :style="{ fontSize: (14 + textBump) + 'px' }">
 
 		<!-- 1. GRADIENT HEADER -->
 		<div class="tp-header"
@@ -348,13 +348,13 @@ const palette = computed(() => {
 		const t = customTokens.value;
 		const colors = t.theme?.extend?.colors || {};
 		return {
-			primary: colors.primary || FRAPPE_DEFAULTS.primary,
-			alternate: colors.alternate || FRAPPE_DEFAULTS.alternate,
+			primary: { ...FRAPPE_DEFAULTS.primary, ...colors.primary },
+			alternate: { ...FRAPPE_DEFAULTS.alternate, ...colors.alternate },
 			fontFamily: t.theme?.extend?.fontFamily?.ui || FRAPPE_DEFAULTS.fontFamily,
 			fontWeight: t.theme?.extend?.fontWeight || 400,
-			semantic: t.semantic || FRAPPE_DEFAULTS.semantic,
-			surface: t.surface || FRAPPE_DEFAULTS.surface,
-			button: t.button || FRAPPE_DEFAULTS.button
+			semantic: { ...FRAPPE_DEFAULTS.semantic, ...t.semantic },
+			surface: { ...FRAPPE_DEFAULTS.surface, ...t.surface },
+			button: { ...FRAPPE_DEFAULTS.button, ...t.button }
 		};
 	}
 	return { ...FRAPPE_DEFAULTS, fontWeight: 400 };
@@ -367,6 +367,12 @@ const font = computed(() => palette.value.fontFamily.join(', '));
 const surfPage = computed(() => palette.value.surface.page);
 const surfPanel = computed(() => palette.value.surface.panel);
 const btnWeight = computed(() => palette.value.fontWeight || 400);
+const textBump = computed(() => {
+	if (themeMode.value === 'custom' && customTokens.value) {
+		return customTokens.value.theme?.extend?.textSizeBump || 0;
+	}
+	return 0;
+});
 
 // Ink: text colors sourced from theme tokens, falling back to alternate palette
 function ink(level) {

@@ -2227,12 +2227,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="gradient-control-group">
+                        <label>Text Size</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button class="scale-bump-btn" data-action="text-size-bump" data-dir="-1" title="Smaller text">◀ Smaller</button>
+                            <span id="textSizeIndicator" style="font-size:11px; color:#888; min-width:20px; text-align:center;">0</span>
+                            <button class="scale-bump-btn" data-action="text-size-bump" data-dir="1" title="Larger text">Larger ▶</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Buttons -->
-        <div class="section">
+        <!-- Buttons (hidden — not used by Vue/Frappe UI) -->
+        <div class="section" style="display:none;">
             <div class="section-header">
                 <h2 class="section-title">Buttons</h2>
             </div>
@@ -2443,6 +2451,9 @@
                 break;
             case 'ink-bump':
                 bumpInk(parseInt(target.dataset.dir));
+                break;
+            case 'text-size-bump':
+                bumpTextSize(parseInt(target.dataset.dir));
                 break;
                 
             // Background/gradient actions
@@ -3812,12 +3823,6 @@
             semanticObj[id] = hslToHex(c.h, c.s, c.l);
         });
 
-        const windowObj = {};
-        CONFIG.windowColors.forEach(({id}) => {
-            const c = state[id];
-            windowObj[id] = hslToHex(c.h, c.s, c.l);
-        });
-
         const fontStack = [state.uiFont || 'Inter', 'sans-serif'];
 
         const inkColors = {};
@@ -3835,11 +3840,11 @@
                     "fontFamily": {
                         "ui": fontStack
                     },
-                    "fontWeight": state.uiFontWeight || 400
+                    "fontWeight": state.uiFontWeight || 400,
+                    "textSizeBump": state.textSizeBump || 0
                 }
             },
             "semantic": semanticObj,
-            "window": windowObj,
             "ink": inkColors,
             "surface": {
                 "page": getTokenColor(state.pageBg || 'alternate-100') || '#FFFFFF',
@@ -3960,6 +3965,7 @@
         textFlipShade: 500,  // Shades >= this use light text
         uiFont: 'Inter',     // UI font family
         uiFontWeight: 400,   // 400 | 500 | 600 | 700
+        textSizeBump: 0,     // -3 to +3, each step ≈ 1px from 14px base
         inkSource: 'alternate', // 'primary' | 'alternate' | 'neutral'
         inkBump: 0              // bright/dark offset for ink colors (-3 to +3)
     };
@@ -4645,6 +4651,13 @@
         updateUI();
     }
 
+    function bumpTextSize(dir) {
+        state.textSizeBump = Math.max(-3, Math.min(3, (state.textSizeBump || 0) + dir));
+        const ind = document.getElementById('textSizeIndicator');
+        if (ind) ind.textContent = state.textSizeBump || 0;
+        updateUI();
+    }
+
     function setInkSource(source) {
         state.inkSource = source;
         updateInkUI();
@@ -4652,7 +4665,7 @@
     }
 
     function bumpInk(dir) {
-        state.inkBump = Math.max(-3, Math.min(3, (state.inkBump || 0) + dir));
+        state.inkBump = Math.max(-5, Math.min(5, (state.inkBump || 0) + dir));
         updateInkUI();
         updateUI();
     }
@@ -4715,6 +4728,10 @@
 
         // Update ink color controls
         updateInkUI();
+
+        // Update text size indicator
+        const tsInd = document.getElementById('textSizeIndicator');
+        if (tsInd) tsInd.textContent = state.textSizeBump || 0;
         
         // Update preview button - use default shade
         const preview = document.getElementById('gradientPreview');
@@ -5101,11 +5118,11 @@
             }
         }
         
-        // Fallback: try static file (for standalone mode)
-        try {
+        // Fallback: try static file (for standalone mode only)
+        if (!frappeApi) try {
             const response = await fetch('/assets/frappe_theme_editor/themes/default-theme.json');
             if (!response.ok) {
-                console.warn('Could not load default theme, using built-in defaults');
+                console.log('No static default theme found, using built-in defaults');
                 return false;
             }
             
@@ -5127,6 +5144,8 @@
             console.warn('Error loading default theme:', err);
             return false;
         }
+
+        return false;
     }
     
     // ═══════════════════════════════════════════════════════════════════════════
