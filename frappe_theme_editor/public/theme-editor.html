@@ -2598,7 +2598,6 @@
             
             if (config) {
                 if (state.alternateAnchorHex && state.alternateAnchorL !== null) {
-                    if (shadeNum === 500 && !state.alternateOffset) return state.alternateAnchorHex;
                     const grayL = FRAPPE_GRAY_L[shadeNum];
                     if (grayL !== undefined) {
                         return hslToHex(state.alternateHue, config.s, grayL);
