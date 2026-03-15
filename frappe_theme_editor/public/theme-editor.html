@@ -2600,9 +2600,9 @@
                 if (state.alternateAnchorHex && state.alternateAnchorL !== null) {
                     const grayL = FRAPPE_GRAY_L[shadeNum];
                     if (grayL !== undefined) {
-                        return hslToHex(state.alternateHue, config.s, grayL);
+                        const anchorHSV = hexToHSV(state.alternateAnchorHex);
+                        return hslToHex(state.alternateHue, anchorHSV.s, grayL);
                     }
-                    return hslToHex(state.alternateHue, config.s, config.l);
                 }
                 return hslToHex(state.alternateHue, config.s, config.l);
             }
@@ -4441,7 +4441,7 @@
     let activePalette = null;
     const paletteHSV = {
         brand:     { h: 210, s: 85, v: 94 },
-        alternate: { h: 210, s: 10, v: 60 }
+        alternate: { h: 210, s: 20, v: 100 }
     };
 
     function openPicker(paletteId) {
