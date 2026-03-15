@@ -118,8 +118,8 @@
 				<div class="tp-table-scroll" :style="{ borderColor: alt('200') }">
 					<table class="tp-table">
 						<thead>
-							<tr :style="{ background: alt('50') }">
-								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }">Company <span class="tp-shade-ref">ink-6 / bg: alt-50</span></th>
+							<tr :style="{ background: alt('100') }">
+								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }">Company <span class="tp-shade-ref">ink-6 / bg: alt-100</span></th>
 								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }">Contact</th>
 								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }">Status</th>
 								<th :style="{ color: ink(6), borderColor: alt('200'), fontWeight: Math.min(700, btnWeight + 200) }" class="text-right">Revenue</th>
@@ -127,7 +127,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="(row, idx) in tableData" :key="row.id"
-								:style="{ background: idx % 2 === 1 ? alt('50') : 'transparent', borderColor: alt('100') }">
+								:style="{ background: idx % 2 === 1 ? alt('100') : 'transparent', borderColor: alt('200') }">
 								<td :style="{ color: ink(9), fontWeight: Math.min(700, btnWeight + 100) }">{{ row.name }} <span v-if="idx===0" class="tp-shade-ref">ink-9</span></td>
 								<td :style="{ color: ink(5) }">{{ row.contact }} <span v-if="idx===0" class="tp-shade-ref">ink-5</span></td>
 								<td>
@@ -352,7 +352,7 @@ const palette = computed(() => {
 			alternate: { ...FRAPPE_DEFAULTS.alternate, ...colors.alternate },
 			fontFamily: t.theme?.extend?.fontFamily?.ui || FRAPPE_DEFAULTS.fontFamily,
 			fontWeight: t.theme?.extend?.fontWeight || 400,
-			semantic: { ...FRAPPE_DEFAULTS.semantic, ...t.semantic },
+			semantic: FRAPPE_DEFAULTS.semantic,
 			surface: { ...FRAPPE_DEFAULTS.surface, ...t.surface },
 			button: { ...FRAPPE_DEFAULTS.button, ...t.button }
 		};
