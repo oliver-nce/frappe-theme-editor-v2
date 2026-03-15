@@ -2586,10 +2586,26 @@
                 return hslToHex(state.primaryHue, state.primarySat || config.s, config.l);
             }
         } else if (type === 'alternate') {
-            const config = CONFIG.alternateShades.find(s => s.shade === shadeNum);
-            const grayL = FRAPPE_GRAY_L[shadeNum];
-            if (config && grayL !== undefined) {
-                return hslToHex(state.alternateHue, config.s, grayL);
+            const shades = CONFIG.alternateShades;
+            const currentIdx = shades.findIndex(s => s.shade === shadeNum);
+            let config = shades[currentIdx];
+            
+            // Apply alternate offset (bump)
+            if (state.alternateOffset && currentIdx !== -1) {
+                const shiftedIdx = Math.max(0, Math.min(shades.length - 1, currentIdx + state.alternateOffset));
+                config = shades[shiftedIdx];
+            }
+            
+            if (config) {
+                if (state.alternateAnchorHex && state.alternateAnchorL !== null) {
+                    // Exact-color anchor mode: user chose a specific color
+                    if (shadeNum === 500 && !state.alternateOffset) return state.alternateAnchorHex;
+                    const anchor500 = shades.find(s => s.shade === 500);
+                    const lOffset = state.alternateAnchorL - anchor500.l;
+                    const adjustedL = Math.max(5, Math.min(98, config.l + lOffset));
+                    return hslToHex(state.alternateHue, state.alternateSat, adjustedL);
+                }
+                return hslToHex(state.alternateHue, config.s, config.l);
             }
         }
         return '#cccccc';
@@ -2599,12 +2615,6 @@
     const NEUTRAL_GRAYS = {
         50:'#F8F8F8', 100:'#F3F3F3', 200:'#EDEDED', 300:'#E2E2E2', 400:'#C7C7C7',
         500:'#999999', 600:'#7C7C7C', 700:'#525252', 800:'#383838', 900:'#171717'
-    };
-
-    // Frappe gray lightness curve — proven spacing for alternate shades
-    const FRAPPE_GRAY_L = {
-        50: 97.3, 100: 95.3, 200: 92.9, 300: 88.6, 400: 78.0,
-        500: 60.0, 600: 48.6, 700: 32.2, 800: 22.0, 900: 9.0
     };
 
     // Frappe's ink-gray mapping: ink level → shade index
@@ -3807,6 +3817,12 @@
             alternateColors[shade.toString()] = getTokenColor(`alternate-${shade}`);
         });
 
+        const semanticObj = {};
+        CONFIG.semanticColors.forEach(({id}) => {
+            const c = state[id];
+            semanticObj[id] = hslToHex(c.h, c.s, c.l);
+        });
+
         const fontStack = [state.uiFont || 'Inter', 'sans-serif'];
 
         const inkColors = {};
@@ -3828,6 +3844,7 @@
                     "textSizeBump": state.textSizeBump || 0
                 }
             },
+            "semantic": semanticObj,
             "ink": inkColors,
             "surface": {
                 "page": getTokenColor(state.pageBg || 'alternate-100') || '#FFFFFF',
@@ -4815,6 +4832,13 @@
         // No-op: bump button state now managed by picker via updatePickerBumpIndicator
     }
 
+    function bumpAlternate(direction) {
+        state.alternateOffset = (state.alternateOffset || 0) + direction;
+        state.alternateOffset = Math.max(-5, Math.min(5, state.alternateOffset));
+        updateUI();
+        refreshAllSwatchPickers();
+    }
+    
     function clearAnchor() {
         // Clear all anchor/brand state
         state.anchorShade = null;
@@ -5394,12 +5418,14 @@
             if (bumpLighterBtn) {
                 bumpLighterBtn.onclick = () => {
                     if (activePalette === 'brand') bumpAnchor(-1);
+                    else if (activePalette === 'alternate') bumpAlternate(-1);
                     updatePickerBumpIndicator();
                 };
             }
             if (bumpDarkerBtn) {
                 bumpDarkerBtn.onclick = () => {
                     if (activePalette === 'brand') bumpAnchor(1);
+                    else if (activePalette === 'alternate') bumpAlternate(1);
                     updatePickerBumpIndicator();
                 };
             }
@@ -5412,7 +5438,8 @@
                 const val = (state.anchorShade && state.anchorHex) ? state.anchorOffset : state.shadeOffset;
                 ind.textContent = val === 0 ? '0' : `${val}`;
             } else if (activePalette === 'alternate') {
-                ind.textContent = '--';
+                const val = state.alternateOffset || 0;
+                ind.textContent = val === 0 ? '0' : `${val}`;
             } else {
                 ind.textContent = '--';
             }
@@ -5467,6 +5494,7 @@
             state.alternateSat = hsl.s;
             state.alternateAnchorHex = hex.toUpperCase();
             state.alternateAnchorL = hsl.l;
+            state.alternateOffset = 0;
             updateUI();
         }
         if (activePalette && colorPickers.shared) {
