@@ -2598,12 +2598,12 @@
             
             if (config) {
                 if (state.alternateAnchorHex && state.alternateAnchorL !== null) {
-                    // Exact-color anchor mode: user chose a specific color
                     if (shadeNum === 500 && !state.alternateOffset) return state.alternateAnchorHex;
-                    const anchor500 = shades.find(s => s.shade === 500);
-                    const lOffset = state.alternateAnchorL - anchor500.l;
-                    const adjustedL = Math.max(5, Math.min(98, config.l + lOffset));
-                    return hslToHex(state.alternateHue, state.alternateSat, adjustedL);
+                    const grayL = FRAPPE_GRAY_L[shadeNum];
+                    if (grayL !== undefined) {
+                        return hslToHex(state.alternateHue, config.s, grayL);
+                    }
+                    return hslToHex(state.alternateHue, config.s, config.l);
                 }
                 return hslToHex(state.alternateHue, config.s, config.l);
             }
@@ -2615,6 +2615,12 @@
     const NEUTRAL_GRAYS = {
         50:'#F8F8F8', 100:'#F3F3F3', 200:'#EDEDED', 300:'#E2E2E2', 400:'#C7C7C7',
         500:'#999999', 600:'#7C7C7C', 700:'#525252', 800:'#383838', 900:'#171717'
+    };
+
+    // Frappe gray lightness curve — proven spacing for alternate shades
+    const FRAPPE_GRAY_L = {
+        50: 97.3, 100: 95.3, 200: 92.9, 300: 88.6, 400: 78.0,
+        500: 60.0, 600: 48.6, 700: 32.2, 800: 22.0, 900: 9.0
     };
 
     // Frappe's ink-gray mapping: ink level → shade index
