@@ -1263,142 +1263,15 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
-        /* COMBINED COLOR PICKERS LAYOUT */
-        .color-pickers-combined {
-            display: flex;
-            gap: 24px;
-            align-items: stretch;  /* Same height */
-            flex-wrap: nowrap;
-        }
+        /* COLOR PICKER PANEL (used by both brand and neutral pickers) */
         .color-picker-panel {
-            flex: 1 1 auto;
             display: flex;
             flex-direction: column;
         }
         .color-picker-panel .picker-layout {
             flex: 1;
         }
-        .neutral-picker-sidebar {
-            flex: 0 0 280px;  /* Fixed width, wider */
-            background: white;
-            border: 1px solid rgba(0,0,0,0.12);
-            border-radius: 12px;
-            padding: 16px;  /* Same as color-picker-panel */
-            box-shadow: 0 2px 24px rgba(0,0,0,0.08), 0 1px 6px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;  /* Equal spacing between elements */
-        }
-        .brand-picker-wrapper,
-        .neutral-picker-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .brand-picker-wrapper .color-picker-panel,
-        .neutral-picker-wrapper .neutral-picker-sidebar {
-            flex: 1;
-        }
-        .picker-label,
-        .neutral-sidebar-label {
-            display: block;
-            font-weight: 500;
-            font-size: 14px;
-            color: #333;
-        }
-        .neutral-picker-sidebar .neutral-color-grid {
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-        }
-        .neutral-picker-sidebar .neutral-grid-cell {
-            width: 100%;
-            aspect-ratio: 1;
-        }
-        /* Hex input + Eyedropper row */
-        .neutral-hex-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin: 10px 0 4px;
-        }
-        .neutral-hex-input-wrapper {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            background: #f8f8f8;
-            border: 1px solid rgba(0,0,0,0.15);
-            border-radius: 6px;
-            padding: 0 8px;
-            height: 34px;
-            transition: border-color 0.15s;
-        }
-        .neutral-hex-input-wrapper:focus-within {
-            border-color: var(--primary, #2490EF);
-            box-shadow: 0 0 0 2px rgba(36,144,239,0.15);
-        }
-        .hex-prefix {
-            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
-            font-size: 13px;
-            color: #999;
-            margin-right: 2px;
-            user-select: none;
-        }
-        .neutral-hex-input {
-            border: none;
-            background: transparent;
-            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
-            font-size: 13px;
-            color: #333;
-            width: 100%;
-            outline: none;
-            padding: 0;
-            text-transform: uppercase;
-        }
-        .neutral-hex-input::placeholder {
-            text-transform: none;
-            color: #bbb;
-        }
-        .neutral-eyedropper-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 34px;
-            height: 34px;
-            border: 1px solid rgba(0,0,0,0.15);
-            border-radius: 6px;
-            background: #f8f8f8;
-            cursor: pointer;
-            color: #555;
-            flex-shrink: 0;
-            transition: background 0.15s, border-color 0.15s, color 0.15s;
-        }
-        .neutral-eyedropper-btn:hover {
-            background: #eee;
-            border-color: rgba(0,0,0,0.25);
-            color: #333;
-        }
-        .neutral-eyedropper-btn:active {
-            background: #e0e0e0;
-        }
-        .neutral-eyedropper-btn.hidden {
-            display: none;
-        }
-        .neutral-middle-row {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-        .neutral-picker-sidebar .neutral-preview-swatch {
-            width: 70px;
-            height: 70px;
-            flex-shrink: 0;
-        }
-        .neutral-scale-bump {
-            flex: 1;
-        }
-        .neutral-apply-btn {
-            width: 100%;
-        }
+        
         
         /* Responsive: stack on narrow screens */
         @media (max-width: 900px) {
@@ -2586,169 +2459,91 @@
         <!-- Primary Colors -->
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title" data-action="toggle-editor" data-target="primary" style="cursor: pointer;">Primary Colors (<span id="primaryLabel">Blue</span> Scale) <span class="click-to-edit">Click to Edit</span></h2>
+                <h2 class="section-title" data-action="toggle-editor" data-target="brand" style="cursor: pointer;">Primary Colors (<span id="primaryLabel">Blue</span> Scale) <span class="click-to-edit">Click to Edit</span></h2>
             </div>
             <div class="color-grid" id="primaryGrid"></div>
             <div id="anchorLegend" style="font-size: 11px; color: #888; margin-top: 4px; display: none;">* = This is your designated brand color</div>
 
-            <div class="editor-panel-overlay hidden" id="editor-overlay" data-action="toggle-editor" data-target="primary"></div>
-            <div class="editor-panel hidden" id="editor-primary">
-                <div class="editor-drag-handle" id="editorDragHandle"></div>
-                <button class="close-editor" data-action="toggle-editor" data-target="primary">✕</button>
-                <div class="editor-row">
-                    <div class="editor-col" style="flex: 0 0 auto;">
-                        <!-- Safari: native picker row (hidden but accessible) -->
-                        <div class="brand-input-row" id="safariPickerRow">
-                            <input type="color" class="color-picker-btn" id="brandColorPicker" value="#888888">
-                            <input type="text" class="hex-input" id="brandHexInput" placeholder="Paste hex" maxlength="7">
-                            <button class="btn-apply-hex" id="applyBrandHex">Apply</button>
-                        </div>
-                        
-                        <!-- Combined Color Pickers: Brand + Neutral side by side -->
-                        <div class="color-pickers-combined">
-                            <!-- Brand Color Picker -->
-                            <div class="brand-picker-wrapper">
-                                <label class="picker-label">Brand Color</label>
-                                <div class="color-picker-panel" id="colorPickerPanel">
-                                <div class="picker-layout">
-                                    <!-- Left Column: Color Grid + Hex Row -->
-                                    <div class="picker-left-col">
-                                        <div class="color-grid-picker" id="colorGridPicker"></div>
-                                        <div class="picker-hex-row">
-                                            <input type="text" id="pickerHexInput" value="#4299F0" maxlength="7">
-                                            <button id="pickerCopyBtn" title="Copy hex">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                                                </svg>
-                                            </button>
-                                            <span class="copied-indicator" id="copiedIndicator">Copied</span>
-                                            <button id="pickerEyedropperBtn" class="eyedropper-hidden" title="Pick from screen" data-action="eyedropper">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path d="m2 22 1-1h3l9-9"></path>
-                                                    <path d="M3 21v-3l9-9"></path>
-                                                    <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4"></path>
-                                                </svg>
-                                            </button>
-                                            <span class="eyedropper-hint" id="eyedropperHint">Click "Show Colors" to access the eye dropper</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Right Column: Preview + Bump + Sliders + Apply -->
-                                    <div class="picker-right-col">
-                                        <!-- Top Row: Preview Swatch + Scale Bump -->
-                                        <div class="picker-top-row">
-                                            <div class="picker-swatch-large" id="pickerSwatchLarge"></div>
-                                            <div class="scale-bump-panel">
-                                                <div class="scale-bump-title">Scale Bump</div>
-                                                <div class="scale-bump-buttons">
-                                                    <button class="scale-bump-btn" id="anchorBumpLeft" data-action="bump-anchor" data-value="-1">
-                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <circle cx="12" cy="12" r="5"></circle>
-                                                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                                                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                                                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                                                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                                                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                                                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                                                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                                                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                                                        </svg>
-                                                        Lighter
-                                                    </button>
-                                                    <span class="scale-bump-indicator" id="anchorIndicator">--</span>
-                                                    <button class="scale-bump-btn" id="anchorBumpRight" data-action="bump-anchor" data-value="1">
-                                                        Darker
-                                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Spacer to push sliders down -->
-                                        <div class="picker-spacer"></div>
-                                        
-                                        <!-- HSV Sliders -->
-                                        <div class="hsv-sliders">
-                                            <div class="hsv-slider-row">
-                                                <label>H</label>
-                                                <input type="range" class="hue-slider-picker" id="pickerHue" min="0" max="360" value="210">
-                                                <input type="number" id="pickerHueNum" min="0" max="360" value="210">
-                                            </div>
-                                            <div class="hsv-slider-row">
-                                                <label>S</label>
-                                                <input type="range" class="sat-slider-picker" id="pickerSat" min="0" max="100" value="85">
-                                                <input type="number" id="pickerSatNum" min="0" max="100" value="85">
-                                            </div>
-                                            <div class="hsv-slider-row">
-                                                <label>V</label>
-                                                <input type="range" class="val-slider-picker" id="pickerVal" min="0" max="100" value="94">
-                                                <input type="number" id="pickerValNum" min="0" max="100" value="94">
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Apply Button (aligned with hex row) -->
-                                        <button class="picker-apply-btn" id="pickerApplyBtn">Apply as Brand Color</button>
-                                    </div>
-                                </div>
-                                </div>
+            <div class="editor-panel-overlay hidden" id="editor-brand-overlay" data-action="toggle-editor" data-target="brand"></div>
+            <div class="editor-panel hidden" id="editor-brand">
+                <div class="editor-drag-handle" data-drag="editor-brand"></div>
+                <button class="close-editor" data-action="toggle-editor" data-target="brand">✕</button>
+                <div class="brand-input-row" id="safariPickerRow" style="height:0;overflow:hidden;margin:0;padding:0;">
+                    <input type="color" class="color-picker-btn" id="brandColorPicker" value="#888888">
+                    <input type="text" class="hex-input" id="brandHexInput" placeholder="Paste hex" maxlength="7">
+                    <button class="btn-apply-hex" id="applyBrandHex">Apply</button>
+                </div>
+                <div class="color-picker-panel">
+                    <div class="picker-layout">
+                        <div class="picker-left-col">
+                            <div class="color-grid-picker" data-role="grid"></div>
+                            <div class="picker-hex-row">
+                                <input type="text" data-role="hex-input" value="#4299F0" maxlength="7">
+                                <button data-role="copy-btn" title="Copy hex">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                                <span class="copied-indicator" data-role="copied-indicator">Copied</span>
+                                <button data-role="eyedropper-btn" class="eyedropper-hidden" title="Pick from screen">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m2 22 1-1h3l9-9"></path>
+                                        <path d="M3 21v-3l9-9"></path>
+                                        <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4"></path>
+                                    </svg>
+                                </button>
                             </div>
-                            
-                            <!-- Neutral Color Picker (sidebar) -->
-                            <div class="neutral-picker-wrapper">
-                                <label class="neutral-sidebar-label">Neutral Temperature</label>
-                                <div class="neutral-picker-sidebar">
-                                    <!-- Grid at top (full width) -->
-                                    <div class="neutral-color-grid" id="neutralColorGrid"></div>
-                                    <!-- Hex input + Eyedropper -->
-                                    <div class="neutral-hex-row">
-                                        <div class="neutral-hex-input-wrapper">
-                                            <span class="hex-prefix">#</span>
-                                            <input type="text" id="neutralHexInput" class="neutral-hex-input" maxlength="6" placeholder="Enter hex" spellcheck="false">
-                                        </div>
-                                        <button class="neutral-eyedropper-btn" id="neutralEyedropperBtn" title="Pick color from screen">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M2 22l1-1h3l9-9"></path>
-                                                <path d="M3 21v-3l9-9"></path>
-                                                <path d="M14.5 5.5l4-4a1.414 1.414 0 0 1 2 0l2 2a1.414 1.414 0 0 1 0 2l-4 4"></path>
-                                                <path d="M12 8l4 4"></path>
+                        </div>
+                        <div class="picker-right-col">
+                            <div class="picker-top-row">
+                                <div class="picker-swatch-large" data-role="swatch-large"></div>
+                                <div class="scale-bump-panel">
+                                    <div class="scale-bump-title">Scale Bump</div>
+                                    <div class="scale-bump-buttons">
+                                        <button class="scale-bump-btn" id="anchorBumpLeft" data-action="bump-anchor" data-value="-1">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="5"></circle>
+                                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                            </svg>
+                                            Lighter
+                                        </button>
+                                        <span class="scale-bump-indicator" id="anchorIndicator">--</span>
+                                        <button class="scale-bump-btn" id="anchorBumpRight" data-action="bump-anchor" data-value="1">
+                                            Darker
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                                             </svg>
                                         </button>
                                     </div>
-                                    <!-- Middle row: Swatch + Scale Bump -->
-                                    <div class="neutral-middle-row">
-                                        <div class="neutral-preview-swatch" id="neutralPreviewSwatch"></div>
-                                        <div class="scale-bump-panel neutral-scale-bump">
-                                        <div class="scale-bump-title">Scale Bump</div>
-                                        <div class="scale-bump-buttons">
-                                            <button class="scale-bump-btn" id="neutralBumpLighter" data-action="bump-neutral" data-value="-1">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <circle cx="12" cy="12" r="5"></circle>
-                                                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                                                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                                                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                                                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                                                </svg>
-                                                Lighter
-                                            </button>
-                                            <span class="scale-bump-indicator" id="neutralBumpIndicator">--</span>
-                                            <button class="scale-bump-btn" id="neutralBumpDarker" data-action="bump-neutral" data-value="1">
-                                                Darker
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </div>
-                                    <!-- Apply button -->
-                                    <button class="picker-apply-btn neutral-apply-btn" data-action="apply-neutral">Apply as Neutral Color</button>
                                 </div>
                             </div>
+                            <div class="picker-spacer"></div>
+                            <div class="hsv-sliders">
+                                <div class="hsv-slider-row">
+                                    <label>H</label>
+                                    <input type="range" class="hue-slider-picker" data-role="hue-slider" min="0" max="360" value="210">
+                                    <input type="number" data-role="hue-num" min="0" max="360" value="210">
+                                </div>
+                                <div class="hsv-slider-row">
+                                    <label>S</label>
+                                    <input type="range" class="sat-slider-picker" data-role="sat-slider" min="0" max="100" value="85">
+                                    <input type="number" data-role="sat-num" min="0" max="100" value="85">
+                                </div>
+                                <div class="hsv-slider-row">
+                                    <label>V</label>
+                                    <input type="range" class="val-slider-picker" data-role="val-slider" min="0" max="100" value="94">
+                                    <input type="number" data-role="val-num" min="0" max="100" value="94">
+                                </div>
+                            </div>
+                            <button class="picker-apply-btn" data-role="apply-btn">Apply as Brand Color</button>
                         </div>
                     </div>
                 </div>
@@ -2758,9 +2553,89 @@
         <!-- Neutral Colors -->
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title" data-action="toggle-editor" data-target="primary" style="cursor: pointer;">Neutral Colors (<span id="neutralLabel">Cool</span> Gray) <span class="click-to-edit">Click to Edit</span></h2>
+                <h2 class="section-title" data-action="toggle-editor" data-target="neutral" style="cursor: pointer;">Neutral Colors (<span id="neutralLabel">Cool</span> Gray) <span class="click-to-edit">Click to Edit</span></h2>
             </div>
-            <div class="color-grid" id="neutralGrid" data-action="toggle-editor" data-target="primary" style="cursor: pointer;"></div>
+            <div class="color-grid" id="neutralGrid" data-action="toggle-editor" data-target="neutral" style="cursor: pointer;"></div>
+
+            <div class="editor-panel-overlay hidden" id="editor-neutral-overlay" data-action="toggle-editor" data-target="neutral"></div>
+            <div class="editor-panel hidden" id="editor-neutral">
+                <div class="editor-drag-handle" data-drag="editor-neutral"></div>
+                <button class="close-editor" data-action="toggle-editor" data-target="neutral">✕</button>
+                <div class="color-picker-panel">
+                    <div class="picker-layout">
+                        <div class="picker-left-col">
+                            <div class="color-grid-picker" data-role="grid"></div>
+                            <div class="picker-hex-row">
+                                <input type="text" data-role="hex-input" value="#9E9E9E" maxlength="7">
+                                <button data-role="copy-btn" title="Copy hex">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                                <span class="copied-indicator" data-role="copied-indicator">Copied</span>
+                                <button data-role="eyedropper-btn" class="eyedropper-hidden" title="Pick from screen">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m2 22 1-1h3l9-9"></path>
+                                        <path d="M3 21v-3l9-9"></path>
+                                        <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="picker-right-col">
+                            <div class="picker-top-row">
+                                <div class="picker-swatch-large" data-role="swatch-large"></div>
+                                <div class="scale-bump-panel">
+                                    <div class="scale-bump-title">Scale Bump</div>
+                                    <div class="scale-bump-buttons">
+                                        <button class="scale-bump-btn" id="neutralBumpLighter" data-action="bump-neutral" data-value="-1">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="5"></circle>
+                                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                            </svg>
+                                            Lighter
+                                        </button>
+                                        <span class="scale-bump-indicator" id="neutralBumpIndicator">--</span>
+                                        <button class="scale-bump-btn" id="neutralBumpDarker" data-action="bump-neutral" data-value="1">
+                                            Darker
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="picker-spacer"></div>
+                            <div class="hsv-sliders">
+                                <div class="hsv-slider-row">
+                                    <label>H</label>
+                                    <input type="range" class="hue-slider-picker" data-role="hue-slider" min="0" max="360" value="210">
+                                    <input type="number" data-role="hue-num" min="0" max="360" value="210">
+                                </div>
+                                <div class="hsv-slider-row">
+                                    <label>S</label>
+                                    <input type="range" class="sat-slider-picker" data-role="sat-slider" min="0" max="100" value="85">
+                                    <input type="number" data-role="sat-num" min="0" max="100" value="85">
+                                </div>
+                                <div class="hsv-slider-row">
+                                    <label>V</label>
+                                    <input type="range" class="val-slider-picker" data-role="val-slider" min="0" max="100" value="94">
+                                    <input type="number" data-role="val-num" min="0" max="100" value="94">
+                                </div>
+                            </div>
+                            <button class="picker-apply-btn" data-role="apply-btn">Apply as Neutral Color</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Semantic Colors, Window Controls, Backgrounds & Typography (side by side) -->
@@ -3969,8 +3844,8 @@
         
         // Editor panels
         editorPanel: null,
-        colorPickerPanel: null,
-        neutralPickerPanel: null,
+        brandPanel: null,
+        neutralPanel: null,
         scaleBumpPanel: null,
         
         // Color grids
@@ -3989,7 +3864,7 @@
         
         // Preview swatches
         previewSwatch: null,
-        neutralPreviewSwatch: null,
+        
         
         // Output areas
         cssOutput: null,
@@ -3997,8 +3872,8 @@
         // Initialize cache - called after DOM is ready
         init() {
             this.editorPanel = document.getElementById('editorPanel');
-            this.colorPickerPanel = document.getElementById('colorPickerPanel');
-            this.neutralPickerPanel = document.getElementById('neutralPickerPanel');
+            this.brandPanel = document.getElementById('editor-brand');
+            this.neutralPanel = document.getElementById('editor-neutral');
             this.scaleBumpPanel = document.getElementById('scaleBumpPanel');
             
             this.primaryGrid = document.getElementById('primaryGrid');
@@ -4013,7 +3888,7 @@
             this.satSlider = document.getElementById('satSlider');
             
             this.previewSwatch = document.getElementById('previewSwatch');
-            this.neutralPreviewSwatch = document.getElementById('neutralPreviewSwatch');
+            
             
             this.cssOutput = document.getElementById('cssOutput');
         }
@@ -4058,7 +3933,6 @@
                 selectSwatchOption(targetId, value);
                 break;
             case 'eyedropper':
-                handleEyedropper();
                 break;
                 
             // Gray picker actions
@@ -4070,7 +3944,7 @@
                 selectGray(targetId, value, grayName);
                 break;
             case 'apply-neutral':
-                applyNeutralColor();
+                if (neutralPicker) applyNeutralFromPicker(neutralPicker.getHex());
                 break;
                 
             // Scale bump actions
@@ -4185,15 +4059,8 @@
         document.addEventListener('click', handleDelegatedClick);
         document.addEventListener('change', handleDelegatedClick);
         
-        // Initialize neutral picker
-        buildNeutralGrid();
-        initNeutralHexInput();
-        if (DOM.neutralPreviewSwatch) {
-            DOM.neutralPreviewSwatch.style.backgroundColor = hsvToHex(210, 8, 62);
-        }
-        
-        // Initialize color grids and UI
-        buildColorGrid();
+        // Initialize color pickers (brand + neutral)
+        initColorPickers();
         updateUI();
         if (typeof initFrappeSwatches === 'function') initFrappeSwatches();
         updateThemeButtons();
@@ -6605,8 +6472,7 @@
     // ═══════════════════════════════════════════════════════════════════════════
     
     function createScaleSwatch(prefix, shade, hex) {
-        // Both primary and neutral swatches open the primary editor (which contains both pickers)
-        const editorTarget = 'primary';
+        const editorTarget = prefix === 'neutral' ? 'neutral' : 'brand';
         return `
             <div class="color-swatch clickable" data-action="toggle-editor" data-target="${editorTarget}">
                 <div class="color-box">
@@ -6969,11 +6835,25 @@
     
     function toggleEditor(type) {
         const panel = document.getElementById('editor-' + type);
-        const overlay = document.getElementById('editor-overlay');
+        const overlay = document.getElementById('editor-' + type + '-overlay');
+        if (!panel) return;
+
+        const isOpening = panel.classList.contains('hidden');
+
+        if (isOpening) {
+            // Close any other open editor first
+            ['brand', 'neutral', 'color', 'scaleBump'].forEach(t => {
+                if (t === type) return;
+                const other = document.getElementById('editor-' + t);
+                const otherOv = document.getElementById('editor-' + t + '-overlay');
+                if (other && !other.classList.contains('hidden')) other.classList.add('hidden');
+                if (otherOv && !otherOv.classList.contains('hidden')) otherOv.classList.add('hidden');
+            });
+        }
+
         panel.classList.toggle('hidden');
         if (overlay) overlay.classList.toggle('hidden');
-        
-        // Reset position to center when opening
+
         if (!panel.classList.contains('hidden')) {
             panel.style.top = '50%';
             panel.style.left = '50%';
@@ -6983,65 +6863,43 @@
     
     // Draggable modal functionality
     function initDraggableEditor() {
-        const panel = document.getElementById('editor-primary');
-        const handle = document.getElementById('editorDragHandle');
-        if (!panel || !handle) return;
-        
-        let isDragging = false;
-        let startX, startY, startLeft, startTop;
-        
-        handle.addEventListener('mousedown', function(e) {
-            isDragging = true;
-            panel.classList.add('dragging');
-            
-            // Get current position
+        let dragState = null;
+
+        document.addEventListener('mousedown', function(e) {
+            const handle = e.target.closest('[data-drag]');
+            if (!handle) return;
+            const panel = document.getElementById(handle.dataset.drag);
+            if (!panel) return;
+
             const rect = panel.getBoundingClientRect();
-            startLeft = rect.left;
-            startTop = rect.top;
-            startX = e.clientX;
-            startY = e.clientY;
-            
-            // Remove transform so we can use absolute positioning
+            dragState = { panel, startLeft: rect.left, startTop: rect.top, startX: e.clientX, startY: e.clientY };
+            panel.classList.add('dragging');
             panel.style.transform = 'none';
-            panel.style.left = startLeft + 'px';
-            panel.style.top = startTop + 'px';
-            
+            panel.style.left = rect.left + 'px';
+            panel.style.top = rect.top + 'px';
             e.preventDefault();
         });
-        
+
         document.addEventListener('mousemove', function(e) {
-            if (!isDragging) return;
-            
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            
-            panel.style.left = (startLeft + dx) + 'px';
-            panel.style.top = (startTop + dy) + 'px';
+            if (!dragState) return;
+            dragState.panel.style.left = (dragState.startLeft + e.clientX - dragState.startX) + 'px';
+            dragState.panel.style.top = (dragState.startTop + e.clientY - dragState.startY) + 'px';
         });
-        
+
         document.addEventListener('mouseup', function() {
-            if (isDragging) {
-                isDragging = false;
-                panel.classList.remove('dragging');
+            if (dragState) {
+                dragState.panel.classList.remove('dragging');
+                dragState = null;
             }
         });
     }
     
     function closeAllEditors() {
-        const editors = ['primary', 'color', 'scaleBump'];
-        editors.forEach(type => {
+        ['brand', 'neutral', 'color', 'scaleBump'].forEach(type => {
             const panel = document.getElementById('editor-' + type);
-            if (panel && !panel.classList.contains('hidden')) {
-                panel.classList.add('hidden');
-            }
-        });
-        
-        // Also close any open pickers
-        const pickers = document.querySelectorAll('.color-picker-panel, .scale-bump-panel');
-        pickers.forEach(picker => {
-            if (picker && picker.style.display === 'block') {
-                picker.style.display = 'none';
-            }
+            const overlay = document.getElementById('editor-' + type + '-overlay');
+            if (panel && !panel.classList.contains('hidden')) panel.classList.add('hidden');
+            if (overlay && !overlay.classList.contains('hidden')) overlay.classList.add('hidden');
         });
     }
     
@@ -7639,9 +7497,6 @@
         isMac: /Mac/.test(navigator.platform)
     };
 
-    let pickerHSV = { h: 210, s: 85, v: 94 };
-    let selectedGridCell = null;
-
     // ─────────────────────────────────────────────────────────────────────────
     // HSV ↔ HEX Conversion
     // ─────────────────────────────────────────────────────────────────────────
@@ -7680,339 +7535,230 @@
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Build Color Grid (Apple NSColorPanel grid: 12x1 + 12x10)
+    // Color grid data (Apple NSColorPanel: 12x1 + 12x10)
     // ─────────────────────────────────────────────────────────────────────────
-    function buildColorGrid() {
-        const grid = document.getElementById('colorGridPicker');
-        if (!grid) return;
-        grid.innerHTML = '';
+    const PICKER_TOP_ROW = [
+        '#FF2600','#FF9300','#FFFB00','#00F900','#00FDFF','#0433FF',
+        '#FF40FF','#942192','#AA7942','#FFFFFF','#8E8E93','#000000'
+    ];
+    const PICKER_GRAY_ROW = [
+        null,'#FFFFFF','#EBEBEB','#D6D6D6','#C0C0C0','#ABABAB',
+        '#939393','#7A7A7A','#5F5F5F','#444444','#232323','#000000'
+    ];
+    const PICKER_GRID_ROWS = [
+        ['#00313F','#001D4C','#12013B','#2E043E','#3D071C','#5C0700','#5B1B01','#573501','#563D01','#666101','#4F5604','#263D0F'],
+        ['#014D63','#002F7B','#1B0853','#430E59','#56102A','#821100','#7C2A01','#7B4A02','#775801','#8C8700','#707607','#375819'],
+        ['#026E8E','#0142A9','#2C1276','#61187C','#781A3E','#B61A01','#AD3F00','#A96801','#A77B01','#C4BC01','#9BA60E','#4F7A28'],
+        ['#018DB4','#0157D7','#371A96','#7B209E','#9A234E','#E22400','#DA5100','#D48601','#D29F01','#F5EC00','#C5D117','#679C33'],
+        ['#00A2D7','#0062FE','#4E22B3','#992ABD','#BF2E66','#FF4112','#FF6A01','#FEAA00','#FEC802','#FFFC40','#DAEB38','#77BB40'],
+        ['#00C7FC','#3A8AFC','#5E30EA','#BD39F3','#E53C7A','#FF6251','#FF8548','#FEB440','#FECA3E','#FFF86B','#E4EF65','#97D25F'],
+        ['#52D4FD','#74A7FF','#864EFE','#D258FE','#EC719F','#FF8D81','#FEA57D','#FFC879','#FFD876','#FFF894','#EAF48F','#B1DE8B'],
+        ['#93D9F7','#A4C7FF','#B18CFF','#DF90FC','#F4A4C1','#FFB5AE','#FFC4AA','#FED9A8','#FFE4A9','#FEFBB8','#F2F8B8','#CBE8B5'],
+        ['#D1E6F1','#D4E4FE','#D7CEFD','#F0CAFD','#F9D2E2','#FFDBD9','#FEE2D5','#FFEDD6','#FFF2D4','#FEFCDD','#F7FADB','#E0EDD4']
+    ];
 
-        // Top row (12): Apple palette anchors (from Apple.clr + system gray)
-        const topRow = [
-            '#FF2600', // Red
-            '#FF9300', // Orange
-            '#FFFB00', // Yellow
-            '#00F900', // Green
-            '#00FDFF', // Cyan
-            '#0433FF', // Blue
-            '#FF40FF', // Magenta
-            '#942192', // Purple
-            '#AA7942', // Brown
-            '#FFFFFF', // White
-            '#8E8E93', // Gray (system gray)
-            '#000000'  // Black
-        ];
+    // ─────────────────────────────────────────────────────────────────────────
+    // createColorPicker(panelEl) — factory for a self-contained color picker
+    // ─────────────────────────────────────────────────────────────────────────
+    function createColorPicker(panelEl) {
+        const $ = (sel) => panelEl.querySelector(sel);
+        let hsv = { h: 210, s: 85, v: 94 };
+        let selectedCell = null;
 
-        // 12x10 matrix: exact Apple grid values (row-major)
-        // Grayscale row (row_0 from Apple spec, first cell is "no fill")
-        const grayRow = [
-            null, '#FFFFFF', '#EBEBEB', '#D6D6D6', '#C0C0C0', '#ABABAB',
-            '#939393', '#7A7A7A', '#5F5F5F', '#444444', '#232323', '#000000'
-        ];
+        function buildGrid() {
+            const grid = $('[data-role="grid"]');
+            if (!grid) return;
+            grid.innerHTML = '';
 
-        // Color grid rows - exact Apple color picker values (rows 1-9)
-        const gridRows = [
-            ['#00313F', '#001D4C', '#12013B', '#2E043E', '#3D071C', '#5C0700', '#5B1B01', '#573501', '#563D01', '#666101', '#4F5604', '#263D0F'],
-            ['#014D63', '#002F7B', '#1B0853', '#430E59', '#56102A', '#821100', '#7C2A01', '#7B4A02', '#775801', '#8C8700', '#707607', '#375819'],
-            ['#026E8E', '#0142A9', '#2C1276', '#61187C', '#781A3E', '#B61A01', '#AD3F00', '#A96801', '#A77B01', '#C4BC01', '#9BA60E', '#4F7A28'],
-            ['#018DB4', '#0157D7', '#371A96', '#7B209E', '#9A234E', '#E22400', '#DA5100', '#D48601', '#D29F01', '#F5EC00', '#C5D117', '#679C33'],
-            ['#00A2D7', '#0062FE', '#4E22B3', '#992ABD', '#BF2E66', '#FF4112', '#FF6A01', '#FEAA00', '#FEC802', '#FFFC40', '#DAEB38', '#77BB40'],
-            ['#00C7FC', '#3A8AFC', '#5E30EA', '#BD39F3', '#E53C7A', '#FF6251', '#FF8548', '#FEB440', '#FECA3E', '#FFF86B', '#E4EF65', '#97D25F'],
-            ['#52D4FD', '#74A7FF', '#864EFE', '#D258FE', '#EC719F', '#FF8D81', '#FEA57D', '#FFC879', '#FFD876', '#FFF894', '#EAF48F', '#B1DE8B'],
-            ['#93D9F7', '#A4C7FF', '#B18CFF', '#DF90FC', '#F4A4C1', '#FFB5AE', '#FFC4AA', '#FED9A8', '#FFE4A9', '#FEFBB8', '#F2F8B8', '#CBE8B5'],
-            ['#D1E6F1', '#D4E4FE', '#D7CEFD', '#F0CAFD', '#F9D2E2', '#FFDBD9', '#FEE2D5', '#FFEDD6', '#FFF2D4', '#FEFCDD', '#F7FADB', '#E0EDD4']
-        ];
-
-        // Render top row (anchor colors)
-        topRow.forEach(hex => {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell';
-            cell.style.backgroundColor = hex;
-            cell.dataset.hex = hex;
-            cell.onclick = () => selectGridCell(cell, hex);
-            grid.appendChild(cell);
-        });
-
-        // Spacer row (gap after top row like Apple)
-        for (let i = 0; i < 12; i++) {
-            const spacer = document.createElement('div');
-            spacer.className = 'grid-spacer';
-            grid.appendChild(spacer);
-        }
-
-        // Render grayscale row
-        grayRow.forEach(hex => {
-            const cell = document.createElement('div');
-            if (hex === null) {
-                // "No fill" cell with red diagonal line
-                cell.className = 'grid-cell no-fill';
-                cell.style.backgroundColor = '#FFFFFF';
-                cell.dataset.hex = 'none';
-                cell.title = 'No Fill';
-            } else {
-                cell.className = 'grid-cell';
-                cell.style.backgroundColor = hex;
-                cell.dataset.hex = hex;
-                cell.onclick = () => selectGridCell(cell, hex);
-            }
-            grid.appendChild(cell);
-        });
-
-        // Render 12x10 color grid (dark to light)
-        gridRows.forEach(row => {
-            row.forEach(hex => {
+            const makeCell = (hex, onClick) => {
                 const cell = document.createElement('div');
                 cell.className = 'grid-cell';
                 cell.style.backgroundColor = hex;
                 cell.dataset.hex = hex;
-                cell.onclick = () => selectGridCell(cell, hex);
-                grid.appendChild(cell);
-            });
-        });
-    }
-
-    function selectGridCell(cell, hex) {
-        if (selectedGridCell) selectedGridCell.classList.remove('selected');
-        selectedGridCell = cell;
-        cell.classList.add('selected');
-        pickerHSV = hexToHSV(hex);
-        updatePickerUI(false);
-        updatePickerSliderBackgrounds();
-    }
-
-    function updatePickerUI(deselectGrid = true) {
-        const hex = hsvToHex(pickerHSV.h, pickerHSV.s, pickerHSV.v);
-        document.getElementById('pickerHue').value = pickerHSV.h;
-        document.getElementById('pickerHueNum').value = pickerHSV.h;
-        document.getElementById('pickerSat').value = pickerHSV.s;
-        document.getElementById('pickerSatNum').value = pickerHSV.s;
-        document.getElementById('pickerVal').value = pickerHSV.v;
-        document.getElementById('pickerValNum').value = pickerHSV.v;
-        document.getElementById('pickerSwatchLarge').style.backgroundColor = hex;
-        document.getElementById('pickerHexInput').value = hex;
-        if (deselectGrid && selectedGridCell) {
-            selectedGridCell.classList.remove('selected');
-            selectedGridCell = null;
-        }
-    }
-
-    function updatePickerSliderBackgrounds() {
-        const satSlider = document.getElementById('pickerSat');
-        const valSlider = document.getElementById('pickerVal');
-        if (satSlider) {
-            satSlider.style.background = `linear-gradient(to right, #888, hsl(${pickerHSV.h},100%,50%))`;
-        }
-        if (valSlider) {
-            valSlider.style.background = `linear-gradient(to right, #000, hsl(${pickerHSV.h},100%,50%))`;
-        }
-    }
-
-    function setupPickerSliders() {
-        ['Hue', 'Sat', 'Val'].forEach(name => {
-            const slider = document.getElementById('picker' + name);
-            const num = document.getElementById('picker' + name + 'Num');
-            if (!slider || !num) return;
-
-            const update = (val) => {
-                val = parseInt(val);
-                if (name === 'Hue') pickerHSV.h = Math.max(0, Math.min(360, val));
-                else if (name === 'Sat') pickerHSV.s = Math.max(0, Math.min(100, val));
-                else pickerHSV.v = Math.max(0, Math.min(100, val));
-                updatePickerUI();
-                updatePickerSliderBackgrounds();
+                cell.onclick = () => onClick(cell, hex);
+                return cell;
             };
 
-            slider.addEventListener('input', () => { num.value = slider.value; update(slider.value); });
-            num.addEventListener('input', () => { slider.value = num.value; update(num.value); });
-        });
-
-        // Hex input
-        document.getElementById('pickerHexInput').addEventListener('input', function() {
-            const hex = this.value;
-            if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-                pickerHSV = hexToHSV(hex);
-                updatePickerUI(false);
-                updatePickerSliderBackgrounds();
+            PICKER_TOP_ROW.forEach(hex => grid.appendChild(makeCell(hex, onSelectCell)));
+            for (let i = 0; i < 12; i++) {
+                const spacer = document.createElement('div');
+                spacer.className = 'grid-spacer';
+                grid.appendChild(spacer);
             }
-        });
-
-        // Copy button
-        document.getElementById('pickerCopyBtn').onclick = () => {
-            const hex = document.getElementById('pickerHexInput').value;
-            navigator.clipboard.writeText(hex);
-            const indicator = document.getElementById('copiedIndicator');
-            indicator.classList.add('show');
-            setTimeout(() => indicator.classList.remove('show'), 2000);
-        };
-
-        // Apply button
-        document.getElementById('pickerApplyBtn').onclick = () => {
-            const hex = document.getElementById('pickerHexInput').value;
-            document.getElementById('brandHexInput').value = hex;
-            applyBrandHex();
-        };
-    }
-
-    // Global eyedropper handler
-    async function handleEyedropper() {
-        // Check if EyeDropper API is available (Chrome/Edge only)
-        if (!('EyeDropper' in window)) {
-            // Show polite message for Safari/Firefox users
-            document.getElementById('modalContent').innerHTML = `
-                <div class="modal-title">Eyedropper Not Available</div>
-                <div class="modal-message">
-                    <p style="margin: 0; line-height: 1.6;">The eyedropper feature requires the EyeDropper API, which is only available in Chrome and Edge browsers.</p>
-                    <p style="margin: 16px 0 0 0; line-height: 1.6;">Please open this app in <strong>Chrome</strong> or <strong>Edge</strong> to use this feature.</p>
-                </div>
-                <div class="modal-actions">
-                    <button class="btn btn-solid" data-action="close-modal">OK</button>
-                </div>
-            `;
-            document.getElementById('modalOverlay').classList.add('show');
-            return;
+            PICKER_GRAY_ROW.forEach(hex => {
+                if (hex === null) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell no-fill';
+                    cell.style.backgroundColor = '#FFFFFF';
+                    cell.dataset.hex = 'none';
+                    cell.title = 'No Fill';
+                    grid.appendChild(cell);
+                } else {
+                    grid.appendChild(makeCell(hex, onSelectCell));
+                }
+            });
+            PICKER_GRID_ROWS.forEach(row => row.forEach(hex => grid.appendChild(makeCell(hex, onSelectCell))));
         }
-        
-        // Chrome/Edge: Use EyeDropper API
-        try {
-            const eyeDropper = new EyeDropper();
-            const result = await eyeDropper.open();
-            const hex = result.sRGBHex.toUpperCase();
-            pickerHSV = hexToHSV(hex);
-            updatePickerUI(false);
-            updatePickerSliderBackgrounds();
-        } catch (err) {
-            // User cancelled
-        }
-    }
 
-    function setupColorPicker() {
-        const safariRow = document.getElementById('safariPickerRow');
-        const pickerPanel = document.getElementById('colorPickerPanel');
-        const nativePicker = document.getElementById('brandColorPicker');
-        const eyedropperBtn = document.getElementById('pickerEyedropperBtn');
-        
-        // Keep Safari row in normal flow but collapsed/hidden
-        safariRow.style.height = '0';
-        safariRow.style.overflow = 'hidden';
-        safariRow.style.margin = '0';
-        safariRow.style.marginLeft = '300px';
-        safariRow.style.padding = '0';
-        
-        // Show custom inline panel
-        pickerPanel.classList.add('active');
-        
-        // Build the color grid
-        buildColorGrid();
-        setupPickerSliders();
-        updatePickerSliderBackgrounds();
-        updatePickerUI(false);
-        
-        // Always show eyedropper button (shows message in unsupported browsers)
-        if (eyedropperBtn) {
-            eyedropperBtn.classList.remove('eyedropper-hidden');
-            if (!ENV.hasEyeDropper) {
-                eyedropperBtn.title = 'Eyedropper (Chrome/Edge only)';
+        function onSelectCell(cell, hex) {
+            if (selectedCell) selectedCell.classList.remove('selected');
+            selectedCell = cell;
+            cell.classList.add('selected');
+            hsv = hexToHSV(hex);
+            updateUI(false);
+            updateSliderBgs();
+        }
+
+        function updateUI(deselectGrid) {
+            if (deselectGrid === undefined) deselectGrid = true;
+            const hex = hsvToHex(hsv.h, hsv.s, hsv.v);
+            const hueSlider = $('[data-role="hue-slider"]');
+            const hueNum = $('[data-role="hue-num"]');
+            const satSlider = $('[data-role="sat-slider"]');
+            const satNum = $('[data-role="sat-num"]');
+            const valSlider = $('[data-role="val-slider"]');
+            const valNum = $('[data-role="val-num"]');
+            const swatch = $('[data-role="swatch-large"]');
+            const hexInput = $('[data-role="hex-input"]');
+            if (hueSlider) hueSlider.value = hsv.h;
+            if (hueNum) hueNum.value = hsv.h;
+            if (satSlider) satSlider.value = hsv.s;
+            if (satNum) satNum.value = hsv.s;
+            if (valSlider) valSlider.value = hsv.v;
+            if (valNum) valNum.value = hsv.v;
+            if (swatch) swatch.style.backgroundColor = hex;
+            if (hexInput) hexInput.value = hex;
+            if (deselectGrid && selectedCell) {
+                selectedCell.classList.remove('selected');
+                selectedCell = null;
             }
         }
-    }
 
-    // Setup color picker
-    setupColorPicker();
-
-    // Load default theme, then update UI
-    loadDefaultTheme().then(() => {
-        updateUI(); // Also updates gradient preview
-
-        // FRAPPE ONLY: Initialize Frappe color swatches
-        if (typeof initFrappeSwatches === 'function') {
-            initFrappeSwatches();
+        function updateSliderBgs() {
+            const satSlider = $('[data-role="sat-slider"]');
+            const valSlider = $('[data-role="val-slider"]');
+            if (satSlider) satSlider.style.background = `linear-gradient(to right, #888, hsl(${hsv.h},100%,50%))`;
+            if (valSlider) valSlider.style.background = `linear-gradient(to right, #000, hsl(${hsv.h},100%,50%))`;
         }
 
-        // Sync brand color picker with current primary-500
-        const currentColor = getTokenColor('primary-500');
-        if (!state.anchorHex) {
-            document.getElementById('brandColorPicker').value = currentColor;
-            pickerHSV = hexToHSV(currentColor);
-            updatePickerUI(false);
-            updatePickerSliderBackgrounds();
+        function setupSliders() {
+            const pairs = [
+                { slider: $('[data-role="hue-slider"]'), num: $('[data-role="hue-num"]'), key: 'h', max: 360 },
+                { slider: $('[data-role="sat-slider"]'), num: $('[data-role="sat-num"]'), key: 's', max: 100 },
+                { slider: $('[data-role="val-slider"]'), num: $('[data-role="val-num"]'), key: 'v', max: 100 }
+            ];
+            pairs.forEach(({ slider, num, key, max }) => {
+                if (!slider || !num) return;
+                const doUpdate = (val) => {
+                    hsv[key] = Math.max(0, Math.min(max, parseInt(val) || 0));
+                    updateUI();
+                    updateSliderBgs();
+                };
+                slider.addEventListener('input', () => { num.value = slider.value; doUpdate(slider.value); });
+                num.addEventListener('input', () => { slider.value = num.value; doUpdate(num.value); });
+            });
+
+            const hexInput = $('[data-role="hex-input"]');
+            if (hexInput) {
+                hexInput.addEventListener('input', function() {
+                    if (/^#[0-9A-Fa-f]{6}$/.test(this.value)) {
+                        hsv = hexToHSV(this.value);
+                        updateUI(false);
+                        updateSliderBgs();
+                    }
+                });
+            }
+
+            const copyBtn = $('[data-role="copy-btn"]');
+            const copiedInd = $('[data-role="copied-indicator"]');
+            if (copyBtn) {
+                copyBtn.onclick = () => {
+                    const hex = $('[data-role="hex-input"]').value;
+                    navigator.clipboard.writeText(hex);
+                    if (copiedInd) {
+                        copiedInd.classList.add('show');
+                        setTimeout(() => copiedInd.classList.remove('show'), 2000);
+                    }
+                };
+            }
+
+            const edBtn = $('[data-role="eyedropper-btn"]');
+            if (edBtn) {
+                edBtn.classList.remove('eyedropper-hidden');
+                if (!ENV.hasEyeDropper) {
+                    edBtn.title = 'Eyedropper (Chrome/Edge only)';
+                }
+                edBtn.onclick = async () => {
+                    if (!ENV.hasEyeDropper) {
+                        if (ENV.isSafari) {
+                            const np = document.getElementById('brandColorPicker');
+                            if (np) np.click();
+                        }
+                        return;
+                    }
+                    try {
+                        const result = await new EyeDropper().open();
+                        hsv = hexToHSV(result.sRGBHex);
+                        updateUI(true);
+                        updateSliderBgs();
+                    } catch (e) { /* cancelled */ }
+                };
+            }
         }
-        
-        updateBumpButtons();
-        console.log('Theme editor initialized');
-    });
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // NEUTRAL COLOR PICKER (completely independent)
-    // ═══════════════════════════════════════════════════════════════════════════
+        buildGrid();
+        setupSliders();
+        updateSliderBgs();
+        updateUI(false);
 
-    var neutralSelectedHue = 210;
-    var neutralSelectedSat = null;
-    var neutralSelectedAnchorHex = null;
-    var neutralSelectedAnchorL = null;
-    var neutralSelectedCell = null;
-
-    function buildNeutralGrid() {
-        var grid = document.getElementById('neutralColorGrid');
-        if (!grid) return;
-        grid.innerHTML = '';
-
-        // Exact hex codes from reference - 3 rows x 5 columns
-        // Row 1: Subtle (LE)
-        // Row 2: Medium (M)
-        // Row 3: Strong (G)
-        var gridColors = [
-            // Row 1: Subtle - Cool to Warm
-            { hex: '#9BA3A9', hue: 210 },
-            { hex: '#9CA2A7', hue: 200 },
-            { hex: '#9DA1A4', hue: 190 },
-            { hex: '#9E9E9E', hue: 0 },
-            { hex: '#9F9D9C', hue: 30 },
-            // Row 2: Medium - Cool to Warm
-            { hex: '#8A9BA8', hue: 210 },
-            { hex: '#8F9BA3', hue: 200 },
-            { hex: '#949B9F', hue: 190 },
-            { hex: '#9E9E9E', hue: 0 },
-            { hex: '#A19D9B', hue: 30 },
-            // Row 3: Strong - Cool to Warm
-            { hex: '#7A93A7', hue: 210 },
-            { hex: '#84959F', hue: 200 },
-            { hex: '#8E979A', hue: 190 },
-            { hex: '#9E9E9E', hue: 0 },
-            { hex: '#A39B97', hue: 30 }
-        ];
-
-        gridColors.forEach(function(color) {
-            var cell = document.createElement('div');
-            cell.className = 'neutral-grid-cell';
-            cell.style.backgroundColor = color.hex;
-            cell.dataset.hue = color.hue;
-            cell.onclick = function() { selectNeutralCell(cell, color.hue, color.hex); };
-            grid.appendChild(cell);
-        });
+        return {
+            getHex() { return hsvToHex(hsv.h, hsv.s, hsv.v); },
+            setColor(hex) { hsv = hexToHSV(hex); updateUI(false); updateSliderBgs(); },
+            get hsv() { return hsv; }
+        };
     }
 
-    function selectNeutralCell(cell, hue, hex) {
-        if (neutralSelectedCell) neutralSelectedCell.classList.remove('selected');
-        neutralSelectedCell = cell;
-        if (cell) cell.classList.add('selected');
-        neutralSelectedHue = hue;
-        neutralSelectedSat = null;
-        neutralSelectedAnchorHex = null;
-        neutralSelectedAnchorL = null;
-        document.getElementById('neutralPreviewSwatch').style.backgroundColor = hex;
-        var hexInput = document.getElementById('neutralHexInput');
-        if (hexInput) {
-            hexInput.value = hex.replace('#', '').toUpperCase();
+    // ─────────────────────────────────────────────────────────────────────────
+    // Initialize both color pickers
+    // ─────────────────────────────────────────────────────────────────────────
+    let brandPicker = null;
+    let neutralPicker = null;
+
+    function initColorPickers() {
+        const brandPanel = document.getElementById('editor-brand');
+        const neutralPanel = document.getElementById('editor-neutral');
+
+        if (brandPanel) {
+            brandPicker = createColorPicker(brandPanel);
+            const applyBtn = brandPanel.querySelector('[data-role="apply-btn"]');
+            if (applyBtn) {
+                applyBtn.onclick = () => {
+                    document.getElementById('brandHexInput').value = brandPicker.getHex();
+                    applyBrandHex();
+                };
+            }
+        }
+
+        if (neutralPanel) {
+            neutralPicker = createColorPicker(neutralPanel);
+            const applyBtn = neutralPanel.querySelector('[data-role="apply-btn"]');
+            if (applyBtn) {
+                applyBtn.onclick = () => {
+                    applyNeutralFromPicker(neutralPicker.getHex());
+                };
+            }
         }
     }
 
-    function applyNeutralColor() {
-        state.neutralHue = neutralSelectedHue;
-        state.neutralSat = neutralSelectedSat;
-        state.neutralAnchorHex = neutralSelectedAnchorHex;
-        state.neutralAnchorL = neutralSelectedAnchorL;
+    function applyNeutralFromPicker(hex) {
+        const hsl = hexToHSL(hex);
+        state.neutralHue = hsl.h;
+        state.neutralSat = hsl.s;
+        state.neutralAnchorHex = hex.toUpperCase();
+        state.neutralAnchorL = hsl.l;
         state.neutralOffset = 0;
-        document.getElementById('neutralBumpIndicator').textContent = '0';
+        const ind = document.getElementById('neutralBumpIndicator');
+        if (ind) ind.textContent = '0';
         updateNeutralBumpButtons();
         updateUI();
     }
@@ -8020,7 +7766,8 @@
     function bumpNeutralScale(direction) {
         state.neutralOffset = (state.neutralOffset || 0) + direction;
         state.neutralOffset = Math.max(-5, Math.min(5, state.neutralOffset));
-        document.getElementById('neutralBumpIndicator').textContent = String(state.neutralOffset);
+        const ind = document.getElementById('neutralBumpIndicator');
+        if (ind) ind.textContent = String(state.neutralOffset);
         updateNeutralBumpButtons();
         updateUI();
     }
@@ -8034,64 +7781,31 @@
         darkerBtn.disabled = (offset >= 5);
     }
 
-    function applyNeutralFromHex(hexStr) {
-        hexStr = hexStr.replace('#', '').trim();
-        if (!/^[0-9a-fA-F]{6}$/.test(hexStr)) return;
-        var fullHex = '#' + hexStr.toUpperCase();
-        var hsl = hexToHSL(fullHex);
-        if (neutralSelectedCell) neutralSelectedCell.classList.remove('selected');
-        neutralSelectedCell = null;
-        neutralSelectedHue = hsl.h;
-        neutralSelectedSat = hsl.s;
-        neutralSelectedAnchorHex = fullHex;
-        neutralSelectedAnchorL = hsl.l;
-        document.getElementById('neutralPreviewSwatch').style.backgroundColor = fullHex;
-    }
+    // Load default theme, then sync pickers
+    loadDefaultTheme().then(() => {
+        updateUI();
 
-    function activateNeutralEyedropper() {
-        if (!window.EyeDropper) return;
-        var dropper = new EyeDropper();
-        dropper.open().then(function(result) {
-            var hex = result.sRGBHex;
-            var hexInput = document.getElementById('neutralHexInput');
-            if (hexInput) hexInput.value = hex.replace('#', '').toUpperCase();
-            applyNeutralFromHex(hex);
-        }).catch(function() {
-            // User cancelled or error - do nothing
-        });
-    }
-
-    function initNeutralHexInput() {
-        var hexInput = document.getElementById('neutralHexInput');
-        var eyedropperBtn = document.getElementById('neutralEyedropperBtn');
-
-        if (hexInput) {
-            hexInput.addEventListener('input', function() {
-                var val = this.value.replace(/[^0-9a-fA-F]/g, '').substring(0, 6);
-                this.value = val.toUpperCase();
-                if (val.length === 6) {
-                    applyNeutralFromHex(val);
-                }
-            });
-            hexInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    var val = this.value.replace(/[^0-9a-fA-F]/g, '').substring(0, 6);
-                    if (val.length === 6) {
-                        applyNeutralFromHex(val);
-                    }
-                }
-            });
+        if (typeof initFrappeSwatches === 'function') {
+            initFrappeSwatches();
         }
 
-        if (eyedropperBtn) {
-            if (!window.EyeDropper) {
-                eyedropperBtn.classList.add('hidden');
-            } else {
-                eyedropperBtn.addEventListener('click', activateNeutralEyedropper);
+        if (brandPicker) {
+            const currentColor = getTokenColor('primary-500');
+            if (!state.anchorHex) {
+                document.getElementById('brandColorPicker').value = currentColor;
+                brandPicker.setColor(currentColor);
             }
         }
-    }
+
+        if (neutralPicker) {
+            const neutralHex = hslToHex(state.neutralHue, state.neutralSat || 10, 50);
+            neutralPicker.setColor(neutralHex);
+        }
+
+        updateBumpButtons();
+        updateNeutralBumpButtons();
+        console.log('Theme editor initialized');
+    });
 
     // ═══════════════════════════════════════════════════════════════════════════
     // BOOTSTRAP - Initialize the application when DOM is ready
